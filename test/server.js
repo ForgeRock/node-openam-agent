@@ -1,26 +1,36 @@
 var express = require('express'),
-    session = require('express-session'),
     passport = require('passport'),
-    OpenAMStrategy = require('..').OpenAMStrategy;
+    openam = require('..');
 
-var app = express();
+var app = express(),
+    agent = new openam.PolicyAgent({
+        serverUrl: 'http://openam.example.com:8080/openam',
+        appUrl: 'http://app.example.com:8080',
+        notificationRoute: '/',
+        notificationsEnabled: true,
+        username: 'passport',
+        password: 'changeit',
+        realm: '/',
+        applicationName: 'passport',
+        ssoOnlyMode: false,
+        notEnforced: []
+    }),
+    strategy = new openam.OpenAMStrategy(agent);
 
-passport.use(new OpenAMStrategy({
-    serverUrl: 'http://u14.example.com:8080/openam',
-    username: 'passport',
-    password: 'changeit',
-    applicationName: 'passport'
-}));
+passport.use(strategy);
 
-//app.use(session({ secret: 'keyboard cat' }));
-app.use(passport.initialize({session: false}));
-//app.use(passport.session());
+app.use(passport.initialize());
 
 app.use(passport.authenticate('openam', {
-    session: false,
-    authorize: true
+    session: false
     //,noRedirect: true
 }));
+
+app.use(agent.notifications);
+
+agent.notifications.on('session', function (session) {
+    console.log('server - session changed!');
+});
 
 app.get('/', function (req, res) {
     res.send('<html><body><h1>Hello ' + req.user + '!</h1></body></html>')
@@ -33,3 +43,4 @@ app.get('/foo', function (req, res) {
 var server = app.listen(8080, function () {
     console.log('Server started on port %d', server.address().port);
 });
+

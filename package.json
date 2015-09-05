@@ -9,11 +9,15 @@
   "author": "zoltan.tarcsay@forgerock.com",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.13.3",
     "cookie": "^0.2.0",
     "passport-strategy": "^1.0.0",
     "promise": "^7.0.4",
     "request-promise": "^0.4.3",
-    "util": "^0.10.3"
+    "shutdown-handler": "^1.0.1",
+    "util": "^0.10.3",
+    "xml2js": "^0.4.12",
+    "xmlbuilder": "^2.6.4"
   },
   "devDependencies": {
     "express": "^4.13.3",
