@@ -4,8 +4,8 @@ var express = require('express'),
 
 var app = express(),
     agent = new openam.PolicyAgent({
-        serverUrl: 'http://openam.example.com:8080/openam',
-        appUrl: 'http://app.example.com:8080',
+        serverUrl: 'http://u14.example.com:8080/openam',
+        appUrl: 'http://zpro.example.com:8080',
         notificationRoute: '/',
         notificationsEnabled: true,
         username: 'passport',
