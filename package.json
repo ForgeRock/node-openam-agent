@@ -1,0 +1,20 @@
+{
+  "name": "passport-openam",
+  "version": "0.0.1",
+  "description": "OpenAM Policy Agent strategy for passportjs",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "node test/server.js"
+  },
+  "author": "zoltan.tarcsay@forgerock.com",
+  "license": "MIT",
+  "dependencies": {
+    "passport-strategy": "^1.0.0",
+    "request": "^2.61.0",
+    "util": "^0.10.3"
+  },
+  "devDependencies": {
+    "express": "^4.13.3",
+    "passport": "^0.3.0"
+  }
+}
