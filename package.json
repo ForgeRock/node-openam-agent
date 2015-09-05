@@ -1,6 +1,6 @@
 {
   "name": "openam-agent",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "OpenAM Policy Agent implementation for express/passport",
   "main": "lib/index.js",
   "scripts": {
