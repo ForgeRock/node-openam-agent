@@ -1,4 +1,4 @@
-# passport-openam
+# node-openam-agent
 OpenAM Policy Agent for expressjs and passportjs
 
 ## Install with npm
