@@ -9,12 +9,15 @@
   "author": "zoltan.tarcsay@forgerock.com",
   "license": "MIT",
   "dependencies": {
+    "cookie": "^0.2.0",
     "passport-strategy": "^1.0.0",
-    "request": "^2.61.0",
+    "promise": "^7.0.4",
+    "request-promise": "^0.4.3",
     "util": "^0.10.3"
   },
   "devDependencies": {
     "express": "^4.13.3",
+    "express-session": "^1.11.3",
     "passport": "^0.3.0"
   }
 }
