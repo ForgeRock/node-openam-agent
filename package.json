@@ -6,7 +6,8 @@
   "scripts": {
     "test": "node test/server.js"
   },
-  "author": "zoltan.tarcsay@forgerock.com",
+  "author": "tarcsay.zoltan@gmail.com",
+  "repository": "https://github.com/zoltantarcsay/node-openam-agent.git",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.13.3",
