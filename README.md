@@ -1,5 +1,11 @@
 # passport-openam
 OpenAM Policy Agent for expressjs and passportjs
+
+## Install with npm
+
+```
+npm install openam-agent
+```
  
 ## PolicyAgent and the OpenAMStrategy
 
@@ -7,7 +13,7 @@ Set up the express app, the agent and the passport:
 ```javascript
 var express = require('express'),
     passport = require('passport'),
-    openam = require('..');
+    openam = require('openam-agent');
 
 var app = express(),
     agent = new openam.PolicyAgent({

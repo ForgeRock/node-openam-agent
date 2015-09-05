@@ -1,5 +1,5 @@
 {
-  "name": "node-openam-agent",
+  "name": "openam-agent",
   "version": "0.0.2",
   "description": "OpenAM Policy Agent implementation for express/passport",
   "main": "lib/index.js",
