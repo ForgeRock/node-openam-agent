@@ -181,3 +181,7 @@ If `true`, policies will not be evaluated.
 ### notEnforced
 An array of not enforced URIs (relative to the root path), e.g. `['/foo/bar', '/baz']`
     
+
+## Compatibility
+
+* OpenAM 12.0.0 or newer
