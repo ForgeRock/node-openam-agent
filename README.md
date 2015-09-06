@@ -335,10 +335,10 @@ An instance of `OpenAMClient`.
 An instance of `NotificationHandler` that also serves as an `EventEmitter`. Events are emitted when notifications are
 received.
 
-#### notifications.routes
+##### notifications.routes
 Express middleware that has a single route: `/agent/notifications`.
 
-#### Events
+##### Events
 * **session**: a session service notification is received. Callbacks will be called with a `session` argument.
 
 #### authenticateAgent()
