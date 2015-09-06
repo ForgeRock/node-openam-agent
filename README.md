@@ -7,9 +7,10 @@ OpenAM Policy Agent for expressjs
 npm install openam-agent
 ```
  
-## PolicyAgent and the OpenAMStrategy
+## How to use in your Express app
 
 Set up the express app and the agent:
+
 ```javascript
 var express = require('express'),
     openam = require('openam-agent');
@@ -29,20 +30,17 @@ var app = express(),
 The agent can use implementations of the `Shield` class to protect resources. A shield can execute any code and then 
 call success() or fail(). The abstract Shield class can be extended to introduce new agent features.
 
+### Shields 
 Built in Shield implementations:
 
 * **CookieShield**: enforces a valid SSOToken in a cookie set by OpenAM
 * **OAuth2Shield**: enforces a valid OAuth2 token (provided by OpenAM) 
+* **BasicAuthShield**: enforces a valid basic auth header (validates credentials against OpenAM) 
 * **PolicyShield**: enforces OpenAM policies for a certain entitlement application
 
 ```javascript
 var cookieShield = new openam.CookieShield();
 app.use('/some/protected/route', agent.shield(cookieShield), function (req, res, next) {
-    // your route handler code here
-});
-
-var policyShield = new openam.PolicyShield('my-app');
-app.use('/very/secure',  agent.shield(policyShield), function (req, res, next) {
     // your route handler code here
 });
 
@@ -55,10 +53,14 @@ var basicAuthShield = new openam.BasicAuthShield();
 app.use('/api/for/challenged/clients',  agent.shield(basicAuthShield), function (req, res, next) {
     // your route handler code here
 });
-```
 
+var policyShield = new openam.PolicyShield('my-app');
+app.use('/very/secure',  agent.shield(policyShield), function (req, res, next) {
+    // your route handler code here
+});
+```
     
-## Notifications
+### Notifications
 
 The agent can register session change listeners. It has a `notifications` middleware you can attach to your app: 
 
@@ -120,7 +122,7 @@ curl -H 'Authorization Bearer 2dcaac7a-8ce1-4e62-8b3a-0d0b9949cc98' http://app.e
 ```
 
 ### OAUth2Shield(realm)
-`name` is the OpenAM realm in which the token should validated (default: `/`).
+`realm` is the OpenAM realm in which the token should validated (default: `/`).
 
 
 ## BasicAuth2Shield class
@@ -131,7 +133,7 @@ service. The access_token must be sent in an Authorization header:
 curl -H 'Authorization Bearer 2dcaac7a-8ce1-4e62-8b3a-0d0b9949cc98' http://app.example.com:8080/mobile
 ```
 
-### BasicAuth2Shield(params)
+### BasicAuthShield(params)
 Available params:
 
 * **realm**: name of the realm in OpenAM to which the suer should be authenticated (default: `/`)
@@ -223,7 +225,44 @@ var config = {
 var agent = new PolicyAgent(config);
 ```
 
-The OpenAMStrategy passport strategy only accepts a PolicyAgent instance as its initialization parameter.
+#### Config options
+* **serverUrl**: The deployment URI of the OpenAM server, e.g. `http://openam.example.com:8080/openam`,
+
+* **appUrl**: The root URL of the application, e.g. `http://app.example.com:8080`.
+
+* **notificationsEnabled**: If enabled, the agent will cache sessions and register a change listener for them in OpenAM. 
+Cached sessions will not be revalidated against OpenAM.
+The notifications middleware has be added to the express application for notifications to work (adds an `/agent/notifications` endpoint 
+which can receive notifications from OpenAM). 
+
+* **notificationRoute**: The route to which the `notifications` middleware is attached.
+
+    ```javascript
+    app.use('/foo/bar/baz', agent.notifications);
+    app.listen(8080);
+    ```
+
+    In the above case the `notificationRoute` should be `/foo/bar/baz`. Notifications will be 
+    sent to `http://app.example.com:8080/foo/bar/baz/agent/notifications`.
+
+* **username**: The agent's username in OpenAM
+
+* **password**: The agent's password in OpenAM
+
+* **realm**: Name of the realm in OpenAM in which the agent profile exists. Default: `/`
+
+* **errorPage**: Callback function; If present, the function's return value will be sent as an error page, otherwise the default error
+template will be used.
+
+    ```javascript
+    config = {
+        ...
+        errorPage: function (status, message, details) {
+            return '<html><body><h1>' + status + ' - '  + message + '</h1></body></html>'
+        }
+        ...
+    }
+    ```
  
 ### config
 The config object passed to the constructor.
@@ -247,7 +286,6 @@ Express middleware that has a single route: `/agent/notifications`.
 #### Events
 * **session**: a session service notification is received. Callbacks will be called with a `session` argument.
 
-
 ### authenticateAgent()
 Authenticates the policy agent using the credentials in the config object. Returns `Promise`.
 
@@ -262,55 +300,6 @@ config (`req` must be an instance of `IncomingRequest`). Returns `Promise`.
 Constructs a `RequestSet` document containing a `AddSessionListener` node for `sessionId`, and sends it to the 
 SessionService. Returns `Promise`.
 
-
-## Available config options for PolicyAgent
-
-### serverUrl
-The deployment URI of the OpenAM server, e.g. `http://openam.example.com:8080/openam`,
-
-### appUrl
-The root URL of the application, e.g. `http://app.example.com:8080`.
-
-### notificationsEnabled
-If enabled, the agent will cache sessions and register a change listener for them in OpenAM. 
-Cached sessions will not be revalidated against OpenAM.
-
-It requires the notifications middleware to be added to the express application (adds an `/agent/notifications` endpoint 
-which can receive notifications from OpenAM). 
-
-### notificationRoute
-The route to which the `notifications` middleware is attached.
-
-```javascript
-app.use('/foo/bar/baz', agent.notifications);
-app.listen(8080);
-```
-
-In the above case the `notificationRoute` should be `/foo/bar/baz`. Notifications will be 
-sent to `http://app.example.com:8080/foo/bar/baz/agent/notifications`.
-
-### username
-The agent's username in OpenAM
-
-### password
-The agent's password in OpenAM
-
-### realm
-Name of the realm in OpenAM in which the agent profile exists. Default: `/`
-
-### errorPage
-Callback function; If present, the function's return value will be sent as an error page, otherwise the default error
-template will be used.
-
-```javascript
-config = {
-    ...
-    errorPage: function (status, message, details) {
-        return '<html><body><h1>' + status + ' - '  + message + '</h1></body></html>'
-    }
-    ...
-}
-```
 
 ## Compatibility
 
