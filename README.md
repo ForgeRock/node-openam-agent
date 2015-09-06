@@ -30,7 +30,9 @@ npm install openam-agent
 How to use in your Express app
 ------------------------------
 
-Set up the express app and the agent:
+* Create an agent profile in OpenAM (a 2.2 agent profile is enough since we only need a username and password, no server side config).
+
+* Set up the express app and the agent:
 
 ```javascript
 var express = require('express'),
@@ -42,7 +44,7 @@ var app = express(),
         appUrl: 'http://app.example.com:8080',
         notificationRoute: '/',
         notificationsEnabled: true,
-        username: 'passport',
+        username: 'my-agent',
         password: 'changeit',
         realm: '/'
     });
@@ -270,7 +272,7 @@ var config = {
     appUrl: 'http://app.example.com:8080',
     notificationRoute: '/',
     notificationsEnabled: true,
-    username: 'passport',
+    username: 'my-agent',
     password: 'changeit',
     realm: '/'
 };
