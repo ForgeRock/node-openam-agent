@@ -1,4 +1,4 @@
-node-openam-agent
+node-openam-agent ![Build Status](https://travis-ci.org/zoltantarcsay/node-openam-agent.svg?branch=master)
 =================
 OpenAM Policy Agent for expressjs
 
