@@ -9,8 +9,7 @@ var app = express(),
         notificationsEnabled: true,
         username: 'node-agent',
         password: 'changeit',
-        realm: '/',
-        notEnforced: []
+        realm: '/'
     });
 
 // notifications
