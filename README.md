@@ -1,13 +1,33 @@
-# node-openam-agent
+node-openam-agent
+=================
 OpenAM Policy Agent for expressjs
 
-## Install with npm
+Table of Contents
+-----------------
+
+- [Install with npm](#install-with-npm)
+- [How to use in your Express app](#how-to-use-in-your-express-app)
+    - [Shields](#shields)
+    - [Notifications](#notifications)
+- [API](#api)
+    - [CookieShield class](#cookieshield-class)
+    - [PolicyShield class](#policyshield-class)
+    - [OAuth2Shield class](#oauth2shield-class)
+    - [BasicAuthShield class](#basicauthshield-class)
+    - [NotificationHandler class](#notificationhandler-class)
+    - [OpenAMClient class](#openamclient-class)
+    - [PolicyAgent class](#policyagent-class)
+- [Compatibility](#compatibility)
+
+Install with npm
+----------------
 
 ```
 npm install openam-agent
 ```
  
-## How to use in your Express app
+How to use in your Express app
+------------------------------
 
 Set up the express app and the agent:
 
@@ -30,7 +50,7 @@ var app = express(),
 The agent can use implementations of the `Shield` class to protect resources. A shield can execute any code and then 
 call success() or fail(). The abstract Shield class can be extended to introduce new agent features.
 
-### Shields 
+#### Shields 
 Built in Shield implementations:
 
 * **CookieShield**: enforces a valid SSOToken in a cookie set by OpenAM
@@ -60,7 +80,7 @@ app.use('/very/secure', agent.shield(policyShield), function (req, res, next) {
 });
 ```
     
-### Notifications
+#### Notifications
 
 The agent can register session change listeners. It has a `notifications` middleware you can attach to your app: 
 
@@ -79,12 +99,15 @@ agent.notifications.on('session', function (session) {
 If notifications are enabled, sessions will be cached by CookieShield. Otherwise, sessions will be validated upon every
 request.
 
-## CookieShield class
+API
+---
+
+### CookieShield class
 
 This shield checks if the request contains a session cookie and validates it against OpenAM. The session is cached if 
 notifications are enabled, otherwise it's re-validated for every request.
 
-### CookieShield(params)
+#### CookieShield(params)
 The constructor function can be called with a `params` object or a string (whose value will be used to override the
 default cookie name). Available options:
 
@@ -92,7 +115,7 @@ default cookie name). Available options:
 * **noRedirect**: if `true`, the agent will not redirect to OpenAM's login page for authentication, only return a 401
  response
  
-## PolicyShield class
+### PolicyShield class
 
 This shield fetches policy decisions from OpenAM for the requested path, specified application name and current user.
 It requires a valid session cookie. Typically used in a chain with CookieShield:
@@ -107,12 +130,12 @@ app.use('/some/protected/route', agent.shield(cookieShield), agent.shield(policy
 
 ```
 
-### PolicyShield(applicationName)
+#### PolicyShield(applicationName)
 The constructor function can be called with an `applicationName` argument whose value will be used as the application 
 name when fetching policy decisions. Default: `iPlanetAMWebAgentService`;
 
 
-## OAuth2Shield class
+### OAuth2Shield class
 
 This Shield implementation validates an OAuth2 access_token issued by OpenAM, using OpenAM's `/oauth2/tokeninfo` 
 service. The access_token must be sent in an Authorization header:
@@ -121,14 +144,14 @@ service. The access_token must be sent in an Authorization header:
 curl -H 'Authorization Bearer 2dcaac7a-8ce1-4e62-8b3a-0d0b9949cc98' http://app.example.com:8080/mobile
 ```
 
-### OAUth2Shield(realm)
+#### OAUth2Shield(realm)
 `realm` is the OpenAM realm in which the token should validated (default: `/`).
 
 
-## BasicAuthShield class
+### BasicAuthShield class
 This shield will enforce basic auth. Credentials will be checked against OpenAM.
 
-### BasicAuthShield(params)
+#### BasicAuthShield(params)
 Available params:
 
 * **realm**: name of the realm in OpenAM to which the suer should be authenticated (default: `/`)
@@ -136,15 +159,15 @@ Available params:
 * **module**: module name used for authentication (overrides `service`)
 
 
-## NotificationHandler class
+### NotificationHandler class
 Returns an object that can be used to manage notifications. Used internally by `PolicyAgent`. 
 
-### router
+#### router
 An instance of `express.Router`. It can be used as a middleware for your express application. It adds a single route:
 `/agent/notifications` which can be used to receive notifications from OpenAM. When a notification is received, its
 contents will be parsed and handled by one of the handler functions.
  
-### sessionNotification()
+#### sessionNotification()
 Notification handler for session notifications. When a session notification is received, it will emit a `session` event.
 CookieShield instances listen on this event to delete any destroyed cookies from the agent's session cache. 
 
@@ -157,26 +180,26 @@ agent.notifications.on('session', function (session) {
 
 (more notification handlers are coming soon...)
 
-## OpenAMClient class
+### OpenAMClient class
 
-### getServerInfo()
+#### getServerInfo()
 Gets the results of `/json/serverinfo/*` and mixes them in to `PolicyAgent.serverInfo`
 
-### authenticate(username, password, realm, service, module, noSession)
+#### authenticate(username, password, realm, service, module, noSession)
 Sends an authentication request to OpenAM. Returns `Promise`. The `module` argument overrides `service`. The default 
 realm is `/`. If noSession is `true`, the credentials will be validated but no session will be created. 
 
-### logout(sessionId)
+#### logout(sessionId)
 Sends a logout request to OpenAM to to destroy the session identified by `sessionId`. Returns `Promise`.
 
-### validateSession(sessionId)
+#### validateSession(sessionId)
 Validates a given sessionId against OpenAM. Returns `Promise`.
 
-### getLoginUrl(req)
+#### getLoginUrl(req)
 Returns an OpenAM login URL with the `goto` query parameter set to the original URL in `req` (`req` must be an instance 
 of `IncomingRequest`). Returns `String`.
 
-### getPolicyDecision(params, sessionId, cookieName)
+#### getPolicyDecision(params, sessionId, cookieName)
 Gets policy decisions from OpenAM for `params`. `params` must be a well formatted OpenAM policy request object:
 
 ```javascript
@@ -195,15 +218,15 @@ params = {
 It needs a valid `sessionId` and `cookieName` in order to make the request. (The user to whom the session belongs needs
 to have the `REST calls for policy evaluation` privilege in OpenAM. Returns `Promise`.
 
-### sessionServiceRequest(requestSet)
+#### sessionServiceRequest(requestSet)
 Sends `requestSet` to the SessionService. `requestSet` must be a properly formatted XML document. Returns `Promise`.
 
-### validateAccessToken(accessToken, realm)
+#### validateAccessToken(accessToken, realm)
 Validates the OAuth2 access_token in the specified realm. Returns `Promise`.
 
-## PolicyAgent class
+### PolicyAgent class
 
-### PolicyAgent(config)
+#### PolicyAgent(config)
 The constructor function, whose argument should be an object of config options (listed below).
 
 ```javascript
@@ -259,19 +282,19 @@ template will be used.
     }
     ```
  
-### config
+#### config
 The config object passed to the constructor.
  
-### serverInfo
+#### serverInfo
 A Promise returned by `getServerInfo()`. Once resolved, the response is mixed into the `serverInfo` object.
 
-### agentSession
+#### agentSession
 A Promise returned by `authenticateAgent()`. Once resolved, the response is mixed into the `serverInfo` object.
 
-### openAMClient
+#### openAMClient
 An instance of `OpenAMClient`.
 
-### notifications
+#### notifications
 An instance of `NotificationHandler` that also serves as an `EventEmitter`. Events are emitted when notifications are
 received.
 
@@ -281,21 +304,22 @@ Express middleware that has a single route: `/agent/notifications`.
 #### Events
 * **session**: a session service notification is received. Callbacks will be called with a `session` argument.
 
-### authenticateAgent()
+#### authenticateAgent()
 Authenticates the policy agent using the credentials in the config object. Returns `Promise`.
 
-### validateSession(sessionId)
+#### validateSession(sessionId)
 Validates a given sessionId against OpenAM and adds a session listener if valid. Returns `Promise`.
 
-### getPolicyDecision(params)
+#### getPolicyDecision(params)
 Gets policy decisions from OpenAM for the `req.originalUrl` resource and the application name specified in the agent 
 config (`req` must be an instance of `IncomingRequest`). Returns `Promise`.
 
-### registerSessionListener(sessionId)
+#### registerSessionListener(sessionId)
 Constructs a `RequestSet` document containing a `AddSessionListener` node for `sessionId`, and sends it to the 
 SessionService. Returns `Promise`.
 
 
-## Compatibility
+Compatibility
+-------------
 
 * [OpenAM 12.0.0](https://backstage.forgerock.com/#!/docs/openam/12.0.0) or newer
