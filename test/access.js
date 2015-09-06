@@ -1,20 +1,15 @@
 var request = require('request-promise'),
     openam = require('..');
 
-var agent = new openam.PolicyAgent({
-    serverUrl: 'http://openam.example.com:8080/openam',
-    username: 'passport',
-    password: 'changeit',
-    realm: '/',
-    applicationName: 'passport'
-});
+var openamClient = new openam.OpenAMClient('http://openam.example.com:8080/openam');
 
-var sessionId;
+var sessionId, cookieName;
 
-agent.getServerInfo()
-    .then(function () {
+openamClient.getServerInfo()
+    .then(function (res) {
+        cookieName = res.cookieName;
         console.log('login demo');
-        return agent.authenticate('demo', 'changeit');
+        return openamClient.authenticate('demo', 'changeit', '/');
     })
     .then(function (res) {
         sessionId = res.tokenId;
@@ -22,19 +17,14 @@ agent.getServerInfo()
         console.log('get /foo');
         return request.get('http://app.example.com:8080/foo', {
             headers: {
-                cookie: agent.serverInfo.cookieName + '=' + sessionId
+                cookie: cookieName + '=' + sessionId
             }
         });
     })
-    .then(function () {
-        console.log('sleep 3');
-        return new Promise(function (resolve) {
-            setTimeout(resolve, 3000);
-        });
-    })
+    .delay(3000)
     .then(function () {
         console.log('logout demo');
-        return agent.logout(sessionId);
+        return openamClient.logout(sessionId);
     })
     .then(function () {
         console.log('done');

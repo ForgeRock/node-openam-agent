@@ -1,43 +1,56 @@
 var express = require('express'),
-    passport = require('passport'),
     openam = require('..');
 
 var app = express(),
     agent = new openam.PolicyAgent({
-        serverUrl: 'http://u14.example.com:8080/openam',
-        appUrl: 'http://zpro.example.com:8080',
+        serverUrl: 'http://openam.example.com:8080/openam',
+        appUrl: 'http://app.example.com:8080',
         notificationRoute: '/',
         notificationsEnabled: true,
-        username: 'passport',
+        username: 'node-agent',
         password: 'changeit',
         realm: '/',
-        applicationName: 'passport',
-        ssoOnlyMode: false,
         notEnforced: []
-    }),
-    strategy = new openam.OpenAMStrategy(agent);
+    });
 
-passport.use(strategy);
-
-app.use(passport.initialize());
-
-app.use(passport.authenticate('openam', {
-    session: false
-    //,noRedirect: true
-}));
-
-app.use(agent.notifications);
-
+// notifications
+app.use(agent.notifications.router);
 agent.notifications.on('session', function (session) {
-    console.log('server - session changed!');
+    console.log('server - session changed!', session);
 });
 
+// app routes
+
+// unprotected root path
 app.get('/', function (req, res) {
-    res.send('<html><body><h1>Hello ' + req.user + '!</h1></body></html>')
+    res.send('<html><body><h1>Hello world!</h1></body></html>')
 });
 
-app.get('/foo', function (req, res) {
-    res.send('<html><body><h1>Foo bar ' + req.user + '!</h1></body></html>')
+// human visitors; use cookie based auth and policy enforcement
+var cookieShield = new openam.CookieShield(),
+    policyShield = new openam.PolicyShield('node-app'),
+    oauth2Shield = new openam.OAuth2Shield('/'),
+    basicAuthShield = new openam.BasicAuthShield({module: 'LDAP'});
+
+app.get('/foo', agent.shield(cookieShield), agent.shield(policyShield), function (req, res) {
+    res.send('<html><body><h1>FOO ' + req.session.data.uid + '!</h1></body></html>')
+});
+app.get('/bar', agent.shield(cookieShield), agent.shield(policyShield), function (req, res) {
+    res.send('<html><body><h1>BAR ' + req.session.data.uid + '!</h1></body></html>')
+});
+
+// oauth auth for mobile devices and what not
+app.get('/mobile', agent.shield(oauth2Shield), function (req, res) {
+    res.send({
+        message: 'hello',
+        tokenInfo: req.session.data
+    });
+});
+
+// basic auth for the more challenged clients
+app.get('/derp', agent.shield(basicAuthShield), function (req, res) {
+    res.set('content-type', 'text/plain');
+    res.send('Derp!');
 });
 
 var server = app.listen(8080, function () {

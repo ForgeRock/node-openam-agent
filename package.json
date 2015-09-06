@@ -10,18 +10,16 @@
   "repository": "https://github.com/zoltantarcsay/node-openam-agent.git",
   "license": "MIT",
   "dependencies": {
+    "basic-auth": "^1.0.3",
     "body-parser": "^1.13.3",
     "cookie": "^0.2.0",
     "express": "^4.13.3",
-    "passport-strategy": "^1.0.0",
     "promise": "^7.0.4",
     "request-promise": "^0.4.3",
     "shutdown-handler": "^1.0.1",
+    "swig": "^1.4.2",
     "util": "^0.10.3",
     "xml2js": "^0.4.12",
     "xmlbuilder": "^2.6.4"
-  },
-  "devDependencies": {
-    "passport": "^0.3.0"
   }
 }
