@@ -10,6 +10,7 @@ Table of Contents
     - [Shields](#shields)
     - [Notifications](#notifications)
 - [API](#api)
+    - [Shield class](#shield-class)
     - [CookieShield class](#cookieshield-class)
     - [PolicyShield class](#policyshield-class)
     - [OAuth2Shield class](#oauth2shield-class)
@@ -101,6 +102,40 @@ request.
 
 API
 ---
+
+### Shield class
+
+Abstract class. Implement your own Shield and plug it into the agent. It's really simple:
+
+```javascript
+// shield implementation 
+
+var util = require('util'),
+    openamAgent = require('openam-agent');
+    
+function MyShield(options) {
+    this.options = options;
+}
+
+util.inherits(MyShield, Shield);
+
+MyShield.prototype.evaluate = function (req, success, fail) {
+    var sessionKey, sessionData;
+    if (this.options.foo) {
+        // do something
+        sessionKey = 'foo';
+        sessionData = 'bar';
+        success(sessionKey, sessionData);
+    } else {
+        // failure
+        fail(401, 'Unauthorized', 'Missing Foo...');
+    }
+};
+
+// including it in the express app 
+
+app.use(agent.shield(new MyShield({foo: 'bar'})));
+```
 
 ### CookieShield class
 
