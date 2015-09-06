@@ -125,7 +125,7 @@ curl -H 'Authorization Bearer 2dcaac7a-8ce1-4e62-8b3a-0d0b9949cc98' http://app.e
 `realm` is the OpenAM realm in which the token should validated (default: `/`).
 
 
-## BasicAuth2Shield class
+## BasicAuthShield class
 This Shield implementation validates an OAuth2 access_token issued by OpenAM, using OpenAM's `/oauth2/tokeninfo` 
 service. The access_token must be sent in an Authorization header:
 
