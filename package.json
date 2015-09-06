@@ -4,7 +4,8 @@
   "description": "OpenAM Policy Agent implementation for express/passport",
   "main": "lib/index.js",
   "scripts": {
-    "demo": "node test/server.js"
+    "demo": "node test/server.js",
+    "test": "./node_modules/mocha/bin/mocha ./test"
   },
   "author": "Zoltan Tarcsay <tarcsay.zoltan@gmail.com>",
   "repository": {
@@ -31,7 +32,13 @@
     "shutdown-handler": "^1.0.1",
     "swig": "^1.4.2",
     "util": "^0.10.3",
+    "uuid": "^2.0.1",
     "xml2js": "^0.4.12",
     "xmlbuilder": "^2.6.4"
+  },
+  "devDependencies": {
+    "mocha": "^2.3.0",
+    "should": "^7.1.0",
+    "sinon": "^1.16.1"
   }
 }
