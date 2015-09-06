@@ -45,17 +45,17 @@ app.use('/some/protected/route', agent.shield(cookieShield), function (req, res,
 });
 
 var oauth2Shield = new openam.OAuth2Shield();
-app.use('/api/for/mobile/devices',  agent.shield(oauth2Shield), function (req, res, next) {
+app.use('/api/for/mobile/devices', agent.shield(oauth2Shield), function (req, res, next) {
     // your route handler code here
 });
 
 var basicAuthShield = new openam.BasicAuthShield();
-app.use('/api/for/challenged/clients',  agent.shield(basicAuthShield), function (req, res, next) {
+app.use('/api/for/challenged/clients', agent.shield(basicAuthShield), function (req, res, next) {
     // your route handler code here
 });
 
 var policyShield = new openam.PolicyShield('my-app');
-app.use('/very/secure',  agent.shield(policyShield), function (req, res, next) {
+app.use('/very/secure', agent.shield(policyShield), function (req, res, next) {
     // your route handler code here
 });
 ```
@@ -126,12 +126,7 @@ curl -H 'Authorization Bearer 2dcaac7a-8ce1-4e62-8b3a-0d0b9949cc98' http://app.e
 
 
 ## BasicAuthShield class
-This Shield implementation validates an OAuth2 access_token issued by OpenAM, using OpenAM's `/oauth2/tokeninfo` 
-service. The access_token must be sent in an Authorization header:
-
-```
-curl -H 'Authorization Bearer 2dcaac7a-8ce1-4e62-8b3a-0d0b9949cc98' http://app.example.com:8080/mobile
-```
+This shield will enforce basic auth. Credentials will be checked against OpenAM.
 
 ### BasicAuthShield(params)
 Available params:
