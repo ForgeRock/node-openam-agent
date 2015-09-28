@@ -1,6 +1,7 @@
 var should = require('should'),
     sinon = require('sinon'),
     Promise = require('promise'),
+    util = require('util'),
     openamAgent = require('..');
 
 
@@ -10,7 +11,7 @@ var mockAgent = {
             valid: !!sessionId && sessionId === 'testSession'
         };
     },
-    serverInfo: Promise.resolve(),
+    serverInfo: util._extend(Promise.resolve(), {domains: ['.example.com']}),
     openAMClient: {
         getLoginUrl: sinon.stub().returns('test-login-url')
     }
@@ -73,6 +74,10 @@ describe('CookieShield', function () {
                     },
                     res: {
                         redirect: sinon.spy()
+                    },
+                    get: function (key) {
+                        var props = {host: 'app.example.com'};
+                        return props[key];
                     }
                 };
 

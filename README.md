@@ -283,7 +283,8 @@ var config = {
     notificationsEnabled: true,
     username: 'my-agent',
     password: 'changeit',
-    realm: '/'
+    realm: '/',
+    getProfiles: true
 };
 
 var agent = new PolicyAgent(config);
@@ -327,6 +328,8 @@ template will be used.
         ...
     }
     ```
+
+* **getProfiles**: `Boolean`. If true, the agent will fetch and cache the user's profile when validating the session. 
  
 #### config
 The config object passed to the constructor.
