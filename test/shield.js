@@ -14,7 +14,8 @@ var mockAgent = {
     serverInfo: util._extend(Promise.resolve(), {domains: ['.example.com']}),
     openAMClient: {
         getLoginUrl: sinon.stub().returns('test-login-url')
-    }
+    },
+    logger: console
 };
 
 describe('CookieShield', function () {

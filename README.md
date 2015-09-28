@@ -330,6 +330,12 @@ template will be used.
     ```
 
 * **getProfiles**: `Boolean`. If true, the agent will fetch and cache the user's profile when validating the session. 
+Default: `false`
+
+* **logger**: `winston Logger` A winstonjs logger instance. If falsy, a new Console logger is created. 
+
+* **logLevel**: logging level [see winston's documentation](https://github.com/winstonjs/winston#logging-levels) 
+Default: `error`. Only used when **logger** is falsy.
  
 #### config
 The config object passed to the constructor.
