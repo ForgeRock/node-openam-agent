@@ -261,6 +261,15 @@ Sends `requestSet` to the SessionService. `requestSet` must be a properly format
 #### validateAccessToken(accessToken, realm)
 Validates the OAuth2 access_token in the specified realm. Returns `Promise`.
 
+#### getProfile(userId, realm, agentSessionId, cookieName)
+Gets a user's profile (requires an agent or admin session).
+
+Params:
+* **userId**: the uid of the user whose profile to get
+* **realm**: the realm of the user
+* **agentSessionId**: a valid session ID with permissions to read user identities from the specified realm
+* **cookieName**: name of the OpenAM session cookie
+
 ### PolicyAgent class
 
 #### PolicyAgent(config)
@@ -346,6 +355,9 @@ Authenticates the policy agent using the credentials in the config object. Retur
 
 #### validateSession(sessionId)
 Validates a given sessionId against OpenAM and adds a session listener if valid. Returns `Promise`.
+
+#### getUserProfile(userId, realm)
+Fetches the user profile for a give UID.
 
 #### getPolicyDecision(params)
 Gets policy decisions from OpenAM for the `req.originalUrl` resource and the application name specified in the agent 
