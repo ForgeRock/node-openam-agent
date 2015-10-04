@@ -9,6 +9,7 @@ Table of Contents
 - [How to use in your Express app](#how-to-use-in-your-express-app)
     - [Shields](#shields)
     - [Notifications](#notifications)
+    - [Logging](#logging)
 - [API](#api)
     - [Shield class](#shield-class)
     - [CookieShield class](#cookieshield-class)
