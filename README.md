@@ -164,6 +164,9 @@ default cookie name). Available options:
  response
 * **getProfiles**: `Boolean`. If true, the agent will fetch and cache the user's profile when validating the session. 
 Default: `false`
+* **passThrough**: `Boolean`. If true, the shield will not enforce valid sessions. This is useful in conjunction with
+`getProfiles:true` when a route is public but you want fetch identity information for any logged in users. 
+Default: `false`  
  
 ### PolicyShield class
 
