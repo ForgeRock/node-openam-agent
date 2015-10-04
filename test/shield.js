@@ -71,7 +71,7 @@ describe('CookieShield', function () {
                 fail = sinon.spy(),
                 req = {
                     headers: {
-                        testCookie: {cookie: 'testCookie=invalidSession'}
+                        cookie: 'testCookie=invalidSession'
                     },
                     res: {
                         redirect: sinon.spy()
@@ -95,7 +95,7 @@ describe('CookieShield', function () {
                 fail = sinon.spy(),
                 req = {
                     headers: {
-                        testCookie: {cookie: 'testCookie=invalidSession'}
+                        cookie: 'testCookie=invalidSession'
                     },
                     res: {
                         redirect: sinon.spy()
@@ -107,6 +107,25 @@ describe('CookieShield', function () {
                 req.res.redirect.called.should.be.false();
                 fail.called.should.be.true();
                 fail.args[0][0].should.be.equal(401);
+            });
+        });
+
+        it('should succeed if the session is invalid but passThrough is true', function () {
+            var cookieShield = new openamAgent.CookieShield({cookieName: 'testCookie', passThrough: true}),
+                success = sinon.spy(),
+                fail = sinon.spy(),
+                req = {
+                    headers: {
+                        cookie: 'testCookie=invalidSession'
+                    },
+                    res: {
+                        redirect: sinon.spy()
+                    }
+                };
+
+            cookieShield.init(mockAgent);
+            return cookieShield.evaluate(req, success, fail).then(function () {
+                success.calledOnce.should.be.equal(true);
             });
         });
     });
