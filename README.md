@@ -102,6 +102,16 @@ agent.notifications.on('session', function (session) {
 If notifications are enabled, sessions will be cached by CookieShield. Otherwise, sessions will be validated upon every
 request.
 
+
+### Logging
+The PolicyAgent uses [winstonjs](https://github.com/winstonjs/winston) for logging. If no logger instance is provided
+in the config, the agent will create its own logger. In this case, you can specify a log level in the config using
+with the `logLevel` property.
+ 
+Each agent instance has a random ID. The logger created by the agent always logs this ID. E.g.:
+
+If you're using your own logger instance, it's recommended that you override its log method to include the agent's id
+
 API
 ---
 
@@ -151,6 +161,8 @@ default cookie name). Available options:
 * **cookieName**: overrides the cookie name that was retrieved from OpenAM with `PolicyAgent.getServerInfo()`
 * **noRedirect**: if `true`, the agent will not redirect to OpenAM's login page for authentication, only return a 401
  response
+* **getProfiles**: `Boolean`. If true, the agent will fetch and cache the user's profile when validating the session. 
+Default: `false`
  
 ### PolicyShield class
 
@@ -284,7 +296,7 @@ var config = {
     username: 'my-agent',
     password: 'changeit',
     realm: '/',
-    getProfiles: true
+    logLevel: 'info'
 };
 
 var agent = new PolicyAgent(config);
@@ -329,13 +341,13 @@ template will be used.
     }
     ```
 
-* **getProfiles**: `Boolean`. If true, the agent will fetch and cache the user's profile when validating the session. 
-Default: `false`
-
 * **logger**: `winston Logger` A winstonjs logger instance. If falsy, a new Console logger is created. 
 
 * **logLevel**: logging level [see winston's documentation](https://github.com/winstonjs/winston#logging-levels) 
 Default: `error`. Only used when **logger** is falsy.
+ 
+#### id
+Short random ID that lets you differentiate agents in logs, etc.
  
 #### config
 The config object passed to the constructor.
@@ -344,7 +356,9 @@ The config object passed to the constructor.
 A Promise returned by `getServerInfo()`. Once resolved, the response is mixed into the `serverInfo` object.
 
 #### agentSession
-A Promise returned by `authenticateAgent()`. Once resolved, the response is mixed into the `serverInfo` object.
+Originally an empty Promise (haha). Whenever a certain client request needs an agent session, the agent will get 
+authenticated and `agentSession` will become a Promise returned by `authenticateAgent()`. Once resolved, the response 
+is mixed into the `agentSession` object.
 
 #### openAMClient
 An instance of `OpenAMClient`.

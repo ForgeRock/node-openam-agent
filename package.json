@@ -29,10 +29,10 @@
     "express": "^4.13.3",
     "promise": "^7.0.4",
     "request-promise": "^0.4.3",
+    "shortid": "^2.2.2",
     "shutdown-handler": "^1.0.1",
     "swig": "^1.4.2",
     "util": "^0.10.3",
-    "uuid": "^2.0.1",
     "winston": "^1.0.2",
     "xml2js": "^0.4.12",
     "xmlbuilder": "^2.6.4"
