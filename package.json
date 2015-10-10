@@ -26,6 +26,7 @@
     "basic-auth": "^1.0.3",
     "body-parser": "^1.13.3",
     "cookie": "^0.2.0",
+    "cradle": "^0.6.9",
     "express": "^4.13.3",
     "memjs": "^0.8.6",
     "mongodb": "^2.0.45",
