@@ -27,6 +27,8 @@
     "body-parser": "^1.13.3",
     "cookie": "^0.2.0",
     "express": "^4.13.3",
+    "memjs": "^0.8.6",
+    "mongodb": "^2.0.45",
     "promise": "^7.0.4",
     "request-promise": "^0.4.3",
     "shortid": "^2.2.2",

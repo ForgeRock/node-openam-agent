@@ -18,6 +18,8 @@ var mockAgent = {
     logger: console
 };
 
+console.info = function () {};
+
 describe('CookieShield', function () {
     it('should set this.agent on init', function () {
         var cookieShield = new openamAgent.CookieShield();
