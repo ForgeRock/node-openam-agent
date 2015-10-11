@@ -5,7 +5,7 @@ var fs = require('fs'),
 var agent = new PolicyAgent({noInit: true, logLevel: 'info', serverUrl: 'http://openam.example.com:8080/openam'});
 
 describe('PolicyAgent', function () {
-    describe('getSessionIdFromLARES', function () {
+    describe('.getSessionIdFromLARES()', function () {
         it('should resolve the promise with the session ID if the CDSSO Assertion (LARES) is valid', function () {
             var lares = fs.readFileSync(__dirname + '/resources/validLARES.txt').toString();
             return agent.getSessionIdFromLARES(lares)
