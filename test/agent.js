@@ -1,6 +1,6 @@
 var fs = require('fs'),
-    should = require('should');
-PolicyAgent = require('../lib/agent').PolicyAgent;
+    should = require('should'),
+    PolicyAgent = require('../lib/agent').PolicyAgent;
 
 var agent = new PolicyAgent({noInit: true, logLevel: 'info', serverUrl: 'http://openam.example.com:8080/openam'});
 
