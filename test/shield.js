@@ -11,14 +11,15 @@ var mockAgent = {
             valid: !!sessionId && sessionId === 'testSession'
         };
     },
-    serverInfo: util._extend(Promise.resolve(), {domains: ['.example.com']}),
-    openAMClient: {
-        getLoginUrl: sinon.stub().returns('test-login-url')
+    getSessionIdFromRequest: function (req) {
+        return Promise.resolve(req.headers.cookie.split('=')[1]);
     },
+    serverInfo: util._extend(Promise.resolve(), {domains: ['.example.com']}),
+    getLoginUrl: sinon.stub().returns('test-login-url'),
     logger: console
 };
 
-console.info = function () {};
+console.info = console.silly = function () {};
 
 describe('CookieShield', function () {
     it('should set this.agent on init', function () {
@@ -27,23 +28,18 @@ describe('CookieShield', function () {
         cookieShield.agent.should.be.equal(mockAgent);
     });
 
-    it('should set cookieName when present', function () {
-        var cookieShield = new openamAgent.CookieShield('testCookie');
-        cookieShield.cookieName.should.be.equal('testCookie');
-    });
-
     it('should set params when present', function () {
         var cookieShield = new openamAgent.CookieShield({
-            cookieName: 'testCookie',
+            getProfiles: true,
             noRedirect: true
         });
-        cookieShield.cookieName.should.be.equal('testCookie');
+        cookieShield.getProfiles.should.be.equal(true);
         cookieShield.noRedirect.should.be.equal(true);
     });
 
     describe('.evaluate()', function () {
         it('should call success if the session is valid', function () {
-            var cookieShield = new openamAgent.CookieShield('testCookie'),
+            var cookieShield = new openamAgent.CookieShield(),
                 success = sinon.spy(),
                 fail = sinon.spy(),
                 req = {headers: {cookie: 'testCookie=testSession'}};
@@ -56,7 +52,7 @@ describe('CookieShield', function () {
         });
 
         it('should not fail if the session is valid', function () {
-            var cookieShield = new openamAgent.CookieShield('testCookie'),
+            var cookieShield = new openamAgent.CookieShield(),
                 success = sinon.spy(),
                 fail = sinon.spy(),
                 req = {headers: {cookie: 'testCookie=testSession'}};
@@ -68,7 +64,7 @@ describe('CookieShield', function () {
         });
 
         it('should send a redirect to the proper URL if the session is invalid', function () {
-            var cookieShield = new openamAgent.CookieShield('testCookie'),
+            var cookieShield = new openamAgent.CookieShield(),
                 success = sinon.spy(),
                 fail = sinon.spy(),
                 req = {
