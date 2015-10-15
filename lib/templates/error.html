@@ -9,6 +9,10 @@
         .jumbotron {
             margin-top: 50px;
         }
+        pre {
+            background-color: #f9f9f9;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -18,7 +22,7 @@
             <small>{{message}}</small>
         </h1>
 
-        <p>{{details}}</p>
+        <pre>{{details}}</pre>
     </div>
     <p class="text-muted">
         Powered by <a href="{{pkg.homepage}}" target="_blank">{{pkg.name}}</a>
