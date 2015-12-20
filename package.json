@@ -47,5 +47,8 @@
     "should": "^8.0.2",
     "should-sinon": "0.0.3",
     "sinon": "^1.16.1"
-  }
+  },
+  "engines": {
+     "node" : ">=0.11" 
+   }
 }
