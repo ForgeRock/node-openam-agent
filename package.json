@@ -5,7 +5,8 @@
   "main": "lib/index.js",
   "scripts": {
     "demo": "node test/server.js",
-    "test": "./node_modules/mocha/bin/mocha ./test"
+    "test": "./node_modules/mocha/bin/mocha ./test",
+    "postinstall": "jsdoc -c jsdoc.json -r"
   },
   "author": "Zoltan Tarcsay <tarcsay.zoltan@gmail.com>",
   "repository": {
@@ -41,6 +42,7 @@
     "xmlbuilder": "^2.6.4"
   },
   "devDependencies": {
+    "jsdoc": "^3.4.0",
     "mocha": "^2.3.0",
     "should": "^7.1.0",
     "sinon": "^1.16.1"
