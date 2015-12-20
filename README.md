@@ -2,13 +2,34 @@ node-openam-agent [![Build Status](https://travis-ci.org/zoltantarcsay/node-open
 =================
 [OpenAM](https://backstage.forgerock.com/#!/docs/openam/current/getting-started) Policy Agent for [express](http://expressjs.com/) applications.
 
-Read the docs in the [wiki](https://github.com/zoltantarcsay/node-openam-agent/wiki).
+Documentation
+-------------
 
-Or build the shiny jsdoc:
+You can find howtos and API docs in the [wiki](https://github.com/zoltantarcsay/node-openam-agent/wiki).
+
+Installation
+------------
 
 ```
-npm install -g jsdoc
-jsdoc -c jsdoc.json
+npm i openam-agent
 ```
+
+JSDoc
+-----
+
+The JSDoc will be built automatically in the postinstall phase
+
+
+Examples
+--------
 
 Check out the [demo app](https://github.com/zoltantarcsay/node-openam-agent-demo) for some code examples.
+
+Contributing
+------------
+
+Contributions and suggestions are most welcome. Please open an issue or submit a pull request.
+
+License
+-------
+[MIT](https://github.com/strongloop/express/blob/master/LICENSE)
