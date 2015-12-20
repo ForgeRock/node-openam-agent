@@ -32,4 +32,4 @@ Contributions and suggestions are most welcome. Please open an issue or submit a
 
 License
 -------
-[MIT](https://github.com/zoltantarcsay/node-openam-agent/blob/master/LICENSE)
+[MIT](https://raw.githubusercontent.com/zoltantarcsay/node-openam-agent/master/LICENSE.md)
