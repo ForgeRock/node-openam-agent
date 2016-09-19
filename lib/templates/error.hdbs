@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{status}}</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #333333;
+            background-color: #e5e5e5;
+        }
+
+        h1 {
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .hero {
+            border-top: 1px solid #dddddd;
+            border-bottom: 1px solid #dddddd;
+            background-color: #f9f9f9;
+            margin-top: 1em;
+        }
+
+        .text-muted {
+            color: #777;
+        }
+
+        pre {
+            border: none;
+            padding: 1em 0;
+            margin: 0 0 10px;
+            word-break: break-all;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        #details {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<noscript>
+    <style>
+        #toggle {
+            display: none;
+        }
+
+        #details {
+            display: block;
+        }
+    </style>
+</noscript>
+<div class="container">
+    <h1><strong>{{status}}</strong> - {{message}}
+    </h1>
+</div>
+<div class="hero">
+    <div class="container">
+        <p>
+            <a id="toggle" href="#">Show details</a>
+        </p>
+        <pre id="details">{{details}}</pre>
+    </div>
+</div>
+<div class="container">
+    <p class="text-muted">
+        <small>Powered by <a href="{{pkg.homepage}}" target="_blank">{{pkg.name}}</a></small>
+    </p>
+</div>
+<script>
+    var show = false,
+            eToggle = document.getElementById('toggle'),
+            eDetails = document.getElementById('details');
+
+    eToggle.addEventListener('click', function () {
+        if (show) {
+            eToggle.innerText = 'Show details';
+            eDetails.style.display = 'none';
+        } else {
+            eToggle.innerText = 'Hide details';
+            eDetails.style.display = 'block';
+        }
+
+        show = !show;
+    });
+</script>
+</body>
+</html>
