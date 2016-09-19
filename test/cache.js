@@ -1,12 +1,13 @@
 var should = require('should'),
     sinon = require('sinon'),
     Promise = require('promise'),
-    cache = require('../lib/cache');
+    cache = require('../lib/cache'),
+    logger = require('../lib/logger');
 
 
 describe('SimpleCache', function () {
     it('should return the stored value if it has not expired yet', function () {
-        var simpleCache = new cache.SimpleCache(0.2);
+        var simpleCache = new cache.SimpleCache({expireAfterSeconds: 0.2});
         return simpleCache
             .put('foo', 'bar')
             .then(function () {
@@ -24,7 +25,7 @@ describe('SimpleCache', function () {
     });
 
     it('should not return the stored value if it has expired', function () {
-        var simpleCache = new cache.SimpleCache(1);
+        var simpleCache = new cache.SimpleCache({expireAfterSeconds: 1});
         return simpleCache
             .put('foo', 'bar')
             .then(function () {
@@ -43,5 +44,14 @@ describe('SimpleCache', function () {
                 should(err).not.be.equal(null);
             });
 
+    });
+
+    it('should clean up entries periodically', function (done) {
+        var simpleCache = new cache.SimpleCache({expireAfterSeconds: 0.2, logger: logger('error', 'test')});
+        simpleCache.put('foo', 'bar');
+        setTimeout(function () {
+            should(simpleCache._keyValueStore.foo).be.undefined();
+            done();
+        }, 300);
     });
 });
