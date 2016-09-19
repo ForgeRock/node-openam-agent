@@ -6,7 +6,7 @@
   "scripts": {
     "demo": "node test/server.js",
     "test": "mocha",
-    "postinstall": "jsdoc -c jsdoc.json -r"
+    "jsdoc": "jsdoc -c jsdoc.json -r"
   },
   "author": "Zoltan Tarcsay <tarcsay.zoltan@gmail.com>",
   "repository": {
