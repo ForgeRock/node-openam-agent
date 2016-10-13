@@ -17,8 +17,7 @@ npm i openam-agent
 JSDoc
 -----
 
-The JSDoc will be built automatically in the postinstall phase
-
+Run `npm run jsdoc` to build the API docs or just read the [wiki](https://github.com/zoltantarcsay/node-openam-agent/wiki)
 
 Examples
 --------
