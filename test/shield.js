@@ -1,6 +1,6 @@
 var should = require('should'),
     sinon = require('sinon'),
-    Promise = require('promise'),
+    Promise = require('bluebird'),
     util = require('util'),
     openamAgent = require('..');
 
