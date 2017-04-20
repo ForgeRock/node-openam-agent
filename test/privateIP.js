@@ -17,7 +17,7 @@ describe('PolicyAgent', function () {
             logLevel: 'none', // suppress logs for tests
             serverUrl: 'http://openam.example.com:8080/openam',
             serverHost: 'openam.example.com:',
-            privateIP: 'https://127.0.0.1:8080/openam'
+            privateIP: 'http://127.0.0.1:8080/openam'
         };
 
         // agent instance
