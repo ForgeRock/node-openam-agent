@@ -29,50 +29,50 @@ describe('PolicyAgent', function () {
 
     describe('getServerInfo', function () {
         it('request should have header host value', function () {
-            client.getServerInfo()
-            assert.equal(request.get.getCall(0).args[1].headers.host, serverHost)
+            client.getServerInfo();
+            assert.equal(request.get.getCall(0).args[1].headers.host, serverHost);
         });
     });
     describe('authenticate', function () {
         it('request should have header host value', function () {
-            client.authenticate()
-            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost)
+            client.authenticate();
+            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost);
         });
     });
     describe('logout', function () {
         it('request should have header host value', function () {
-            client.logout('sessionID')
-            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost)
+            client.logout('sessionID');
+            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost);
         });
     });
     describe('validateSession', function () {
         it('request should have header host value', function () {
-            client.validateSession('sessionID')
-            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost)
+            client.validateSession('sessionID');
+            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost);
         });
     });
     describe('getPolicyDecision', function () {
         it('request should have header host value', function () {
-            client.getPolicyDecision({},'sessionID', 'cookieName')git 
-            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost)
+            client.getPolicyDecision({},'sessionID', 'cookieName');
+            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost);
         });
     });
     describe('sessionServiceRequest', function () {
         it('request should have header host value', function () {
-            client.sessionServiceRequest()
-            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost)
+            client.sessionServiceRequest();
+            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost);
         });
     });
     describe('validateAccessToken', function () {
         it('request should have header host value', function () {
-            client.validateAccessToken()
-            assert.equal(request.get.getCall(0).args[1].headers.host, serverHost)
+            client.validateAccessToken();
+            assert.equal(request.get.getCall(0).args[1].headers.host, serverHost);
         });
     });
     describe('getProfile', function () {
         it('request should have header host value', function () {
-            client.getProfile()
-            assert.equal(request.get.getCall(0).args[1].headers.host, serverHost)
+            client.getProfile();
+            assert.equal(request.get.getCall(0).args[1].headers.host, serverHost);
         });
     });
 });
