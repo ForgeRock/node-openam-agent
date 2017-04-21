@@ -53,7 +53,7 @@ describe('PolicyAgent', function () {
     });
     describe('getPolicyDecision', function () {
         it('request should have header host value', function () {
-            client.getPolicyDecision({},'sessionID', 'cookieName')
+            client.getPolicyDecision({},'sessionID', 'cookieName')git 
             assert.equal(request.post.getCall(0).args[1].headers.host, serverHost)
         });
     });
