@@ -24,6 +24,7 @@
     "Agent"
   ],
   "dependencies": {
+    "assert": "^1.4.1",
     "basic-auth": "^1.0.3",
     "bluebird": "^3.4.6",
     "body-parser": "^1.13.3",

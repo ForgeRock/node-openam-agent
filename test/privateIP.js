@@ -1,122 +1,78 @@
-var fs = require('fs'),
-    should = require('should'),
-    sinon = require('sinon'),
+var sinon = require('sinon'),
+    assert = require('assert'),
     request = require('request-promise'),
-    openamAgent = require('../lib'),
-    PolicyAgent = require('../lib/agent').PolicyAgent,
-    SimpleCache = require('openam-agent-cache-simple').SimpleCache;
-
-require('should-sinon');
+    OpenAMClient = require('../lib/openam').OpenAMClient;
 
 describe('PolicyAgent', function () {
-    var agent, otions, resolve, stubRequest = {};
+    var serverHost, serverUrl, privateIP;
 
     beforeEach(function () {
-        options = {
-            noInit: true,
-            logLevel: 'none', // suppress logs for tests
-            serverUrl: 'http://openam.example.com:8080/openam',
-            serverHost: 'openam.example.com:',
-            privateIP: 'http://127.0.0.1:8080/openam'
-        };
 
-        // agent instance
-        agent = new PolicyAgent(options);
+        serverUrl = 'http://openam.example.com:8080/openam';
+        serverHost = 'openam.example.com';
+        privateIP = 'http://127.0.0.1:8080/openam';
+
+        // client instance
+        client = new OpenAMClient(serverUrl, serverHost, privateIP);
 
         // spies
-        resolve = sinon.spy();
+        getRequests = sinon.spy(request, 'get');
+        postRequests = sinon.spy(request, 'post');
 
-        // stubs
-        stubRequest.get = sinon.stub(request, 'get', function () {
-            return Promise.resolve();
-        });
-        stubRequest.post = sinon.stub(request, 'post', function () {
-            return Promise.resolve();
-        });
     });
 
     afterEach(function () {
         // restore stubs
-        request.get.restore();
-        request.post.restore();
+        getRequests.restore();
+        postRequests.restore();
     });
 
-    it('should set the options', function () {
-        should(agent.options).be.equal(options);
-    });
-
-    it('should have a random ID', function () {
-        should(agent.id.match(/[a-z0-9]+/i)).not.be.null();
-    });
-
-    it('should have an OpenAMClient instance', function () {
-        should(agent.openAMClient instanceof openamAgent.OpenAMClient).be.true();
-    });
-
-    it('should have a session cache instance', function () {
-        should(agent.sessionCache instanceof SimpleCache).be.true();
-    });
-
-    describe('serverInfo', function () {
-        it('should be a resolved promise', function () {
-            should(agent.serverInfo).be.Promise();
-            agent.serverInfo.then(resolve);
-            return agent.serverInfo.then(function () {
-                resolve.should.be.called();
-            });
+    describe('getServerInfo', function () {
+        it('request should have header host value', function () {
+            client.getServerInfo()
+            assert.equal(request.get.getCall(0).args[1].headers.host, serverHost)
         });
     });
-
-    describe('agentSession', function () {
-        it('should be a resolved promise', function () {
-            should(agent.agentSession).be.Promise();
-            agent.agentSession.then(resolve);
-            return agent.agentSession.then(function () {
-                resolve.should.be.called();
-            });
+    describe('authenticate', function () {
+        it('request should have header host value', function () {
+            client.authenticate()
+            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost)
         });
     });
-
-    it('should remove destroyed sessions on session events', function (done) {
-        var sessionData = {foo: 'bar'};
-
-        agent.on('session', function () {
-            should(agent.sessionCache._keyValueStore.mock).be.undefined();
-            done();
-        });
-
-        agent.sessionCache.put('mock', sessionData);
-        agent.sessionCache.get('mock').then(function (data) {
-            data.should.be.equal(sessionData);
-            agent.emit('session', {state: 'destroyed', sid: 'mock'});
+    describe('logout', function () {
+        it('request should have header host value', function () {
+            client.logout('sessionID')
+            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost)
         });
     });
-
-    describe('init', function () {
-        it('should get the server info', function () {
-            agent.init();
-            stubRequest.get.should.be.calledWith(options.privateIP + '/json/serverinfo/*');
+    describe('validateSession', function () {
+        it('request should have header host value', function () {
+            client.validateSession('sessionID')
+            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost)
         });
     });
-
-    describe('.getSessionIdFromLARES()', function () {
-        it('should resolve the promise with the session ID if the CDSSO Assertion (LARES) is valid', function () {
-            var lares = fs.readFileSync(__dirname + '/resources/validLARES.txt').toString();
-            return agent.getSessionIdFromLARES(lares)
-                .then(function (sessionId) {
-                    should(sessionId).be.equal('foo');
-                });
+    describe('getPolicyDecision', function () {
+        it('request should have header host value', function () {
+            client.getPolicyDecision({},'sessionID', 'cookieName')
+            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost)
         });
-        it('should reject the promise if the CDSSO Assertion (LARES) is invalid', function () {
-            var lares = fs.readFileSync(__dirname + '/resources/expiredLARES.txt').toString();
-
-            return agent.getSessionIdFromLARES(lares)
-                .then(function (sessionId) {
-                    should(sessionId).be.equal(null);
-                }).catch(function (err) {
-                    should(err).not.be.equal(undefined);
-                    should(err).not.be.equal(null);
-                });
+    });
+    describe('sessionServiceRequest', function () {
+        it('request should have header host value', function () {
+            client.sessionServiceRequest()
+            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost)
+        });
+    });
+    describe('validateAccessToken', function () {
+        it('request should have header host value', function () {
+            client.validateAccessToken()
+            assert.equal(request.get.getCall(0).args[1].headers.host, serverHost)
+        });
+    });
+    describe('getProfile', function () {
+        it('request should have header host value', function () {
+            client.getProfile()
+            assert.equal(request.get.getCall(0).args[1].headers.host, serverHost)
         });
     });
 });
