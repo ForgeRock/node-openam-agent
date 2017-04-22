@@ -89,21 +89,21 @@ describe('Test with private IP', function () {
     });
     describe('validateAccessToken', function () {
         it('request should have private ip in url', function () {
-            client.validateAccessToken('accessToken');
+            client.validateAccessToken();
             assert.equal(request.get.getCall(0).args[0].includes(privateIP), true);
         });
         it('request should have header host value', function () {
-            client.validateAccessToken('accessToken');
+            client.validateAccessToken();
             assert.equal(request.get.getCall(0).args[1].headers.host, hostname);
         });
     });
     describe('getProfile', function () {
         it('request should have private ip in url', function () {
-            client.getProfile('userId', 'realm', 'sessionId', 'cookieName');
+            client.getProfile();
             assert.equal(request.get.getCall(0).args[0].includes(privateIP), true);
         });
         it('request should have header host value', function () {
-            client.getProfile('userId', 'realm', 'sessionId', 'cookieName');
+            client.getProfile();
             assert.equal(request.get.getCall(0).args[1].headers.host, hostname);
         });
     });
@@ -173,11 +173,11 @@ describe('Test without private IP', function () {
     });
     describe('getPolicyDecision', function () {
         it('request should have serverUrl in url', function () {
-            client.getPolicyDecision({}, 'sessionId', 'cookieName');
+            client.getPolicyDecision({}, 'sessionID', 'cookieName');
             assert.equal(request.post.getCall(0).args[0].includes(serverUrl), true);
         });
         it('request should have header host value', function () {
-            client.getPolicyDecision({}, 'sessionId', 'cookieName');
+            client.getPolicyDecision({}, 'sessionID', 'cookieName');
             assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
         });
     });
@@ -193,21 +193,21 @@ describe('Test without private IP', function () {
     });
     describe('validateAccessToken', function () {
         it('request should have serverUrl in url', function () {
-            client.validateAccessToken('accessToken');
+            client.validateAccessToken();
             assert.equal(request.get.getCall(0).args[0].includes(serverUrl), true);
         });
         it('request should have header host value', function () {
-            client.validateAccessToken('accessToken');
+            client.validateAccessToken();
             assert.equal(request.get.getCall(0).args[1].headers.host, hostname);
         });
     });
     describe('getProfile', function () {
         it('request should have serverUrl in url', function () {
-            client.getProfile('userId', 'realm', 'sessionId', 'cookieName');
+            client.getProfile();
             assert.equal(request.get.getCall(0).args[0].includes(serverUrl), true);
         });
         it('request should have header host value', function () {
-            client.getProfile('userId', 'realm', 'sessionId', 'cookieName');
+            client.getProfile();
             assert.equal(request.get.getCall(0).args[1].headers.host, hostname);
         });
     });
