@@ -89,11 +89,11 @@ describe('Test with private IP', function () {
     });
     describe('validateAccessToken', function () {
         it('request should have private ip in url', function () {
-            clientIP.validateAccessToken();
+            clientIP.validateAccessToken('accessToken');
             assert.equal((request.get.getCall(0).args[0].indexOf(privateIP) > -1), true);
         });
         it('request should have header host value', function () {
-            clientIP.validateAccessToken();
+            clientIP.validateAccessToken('accessToken');
             assert.equal(request.get.getCall(0).args[1].headers.host, hostname);
         });
     });
@@ -192,11 +192,11 @@ describe('Test without private IP', function () {
     });
     describe('validateAccessToken', function () {
         it('request should have serverUrl in url', function () {
-            client.validateAccessToken();
+            client.validateAccessToken('accessToken');
             assert.equal((request.get.getCall(0).args[0].indexOf(serverUrl) > -1), true);
         });
         it('request should not have header host value', function () {
-            client.validateAccessToken();
+            client.validateAccessToken('accessToken');
             assert.equal(request.get.getCall(0).args[1].headers.host, undefined);
         });
     });
