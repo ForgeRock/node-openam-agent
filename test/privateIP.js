@@ -30,7 +30,7 @@ describe('Test with private IP', function () {
     describe('getServerInfo', function () {
         it('request should have private ip in url', function () {
             clientIP.getServerInfo();
-            assert.equal(request.get.getCall(0).args[0].includes(privateIP), true);
+            assert.equal((request.get.getCall(0).args[0].indexOf(privateIP) > -1), true);
         });
         it('request should have header host value', function () {
             clientIP.getServerInfo();
@@ -40,7 +40,7 @@ describe('Test with private IP', function () {
     describe('authenticate', function () {
         it('request should have private ip in url', function () {
             clientIP.authenticate();
-            assert.equal(request.post.getCall(0).args[0].includes(privateIP), true);
+            assert.equal((request.post.getCall(0).args[0].indexOf(privateIP) > -1), true);
         });
         it('request should have header host value', function () {
             clientIP.authenticate();
@@ -50,7 +50,7 @@ describe('Test with private IP', function () {
     describe('logout', function () {
         it('request should have private ip in url', function () {
             clientIP.logout('sessionid');
-            assert.equal(request.post.getCall(0).args[0].includes(privateIP), true);
+            assert.equal((request.post.getCall(0).args[0].indexOf(privateIP) > -1), true);
         });
         it('request should have header host value', function () {
             clientIP.logout('sessionid');
@@ -60,7 +60,7 @@ describe('Test with private IP', function () {
     describe('validateSession', function () {
         it('request should have private ip in url', function () {
             clientIP.validateSession('sessionid');
-            assert.equal(request.post.getCall(0).args[0].includes(privateIP), true);
+            assert.equal((request.post.getCall(0).args[0].indexOf(privateIP) > -1), true);
         });
         it('request should have header host value', function () {
             clientIP.validateSession('sessionid');
@@ -70,7 +70,7 @@ describe('Test with private IP', function () {
     describe('getPolicyDecision', function () {
         it('request should have private ip in url', function () {
             clientIP.getPolicyDecision({}, 'sessionId', 'cookieName');
-            assert.equal(request.post.getCall(0).args[0].includes(privateIP), true);
+            assert.equal((request.post.getCall(0).args[0].indexOf(privateIP) > -1), true);
         });
         it('request should have header host value', function () {
             clientIP.getPolicyDecision({}, 'sessionId', 'cookieName');
@@ -80,7 +80,7 @@ describe('Test with private IP', function () {
     describe('sessionServiceRequest', function () {
         it('request should have private ip in url', function () {
             clientIP.sessionServiceRequest();
-            assert.equal(request.post.getCall(0).args[0].includes(privateIP), true);
+            assert.equal((request.post.getCall(0).args[0].indexOf(privateIP) > -1), true);
         });
         it('request should have header host value', function () {
             clientIP.sessionServiceRequest();
@@ -90,7 +90,7 @@ describe('Test with private IP', function () {
     describe('validateAccessToken', function () {
         it('request should have private ip in url', function () {
             clientIP.validateAccessToken();
-            assert.equal(request.get.getCall(0).args[0].includes(privateIP), true);
+            assert.equal((request.get.getCall(0).args[0].indexOf(privateIP) > -1), true);
         });
         it('request should have header host value', function () {
             clientIP.validateAccessToken();
@@ -100,7 +100,7 @@ describe('Test with private IP', function () {
     describe('getProfile', function () {
         it('request should have private ip in url', function () {
             clientIP.getProfile();
-            assert.equal(request.get.getCall(0).args[0].includes(privateIP), true);
+            assert.equal((request.get.getCall(0).args[0].indexOf(privateIP) > -1), true);
         });
         it('request should have header host value', function () {
             clientIP.getProfile();
@@ -133,7 +133,7 @@ describe('Test without private IP', function () {
     describe('getServerInfo', function () {
         it('request should have serverUrl in url', function () {
             client.getServerInfo();
-            assert.equal(request.get.getCall(0).args[0].includes(serverUrl), true);
+            assert.equal((request.get.getCall(0).args[0].indexOf(serverUrl) > -1), true);
         });
         it('request should not have header host value', function () {
             client.getServerInfo();
@@ -143,7 +143,7 @@ describe('Test without private IP', function () {
     describe('authenticate', function () {
         it('request should have serverUrl in url', function () {
             client.authenticate();
-            assert.equal(request.post.getCall(0).args[0].includes(serverUrl), true);
+            assert.equal((request.post.getCall(0).args[0].indexOf(serverUrl) > -1), true);
         });
         it('request should not have header host value', function () {
             client.authenticate();
@@ -153,7 +153,7 @@ describe('Test without private IP', function () {
     describe('logout', function () {
         it('request should not have serverUrl in url', function () {
             client.logout('sessionid');
-            assert.equal(request.post.getCall(0).args[0].includes(serverUrl), true);
+            assert.equal((request.post.getCall(0).args[0].indexOf(serverUrl) > -1), true);
         });
         it('request should not have header host value', function () {
             client.logout('sessionid');
@@ -163,7 +163,7 @@ describe('Test without private IP', function () {
     describe('validateSession', function () {
         it('request should not have serverUrl in url', function () {
             client.validateSession('sessionid');
-            assert.equal(request.post.getCall(0).args[0].includes(serverUrl), true);
+            assert.equal((request.post.getCall(0).args[0].indexOf(serverUrl) > -1), true);
         });
         it('request should not have header host value', function () {
             client.validateSession('sessionid');
@@ -173,7 +173,7 @@ describe('Test without private IP', function () {
     describe('getPolicyDecision', function () {
         it('request should not have serverUrl in url', function () {
             client.getPolicyDecision({}, 'sessionID', 'cookieName');
-            assert.equal(request.post.getCall(0).args[0].includes(serverUrl), true);
+            assert.equal((request.post.getCall(0).args[0].indexOf(serverUrl) > -1), true);
         });
         it('request should not have header host value', function () {
             client.getPolicyDecision({}, 'sessionID', 'cookieName');
@@ -183,7 +183,7 @@ describe('Test without private IP', function () {
     describe('sessionServiceRequest', function () {
         it('request should not have serverUrl in url', function () {
             client.sessionServiceRequest();
-            assert.equal(request.post.getCall(0).args[0].includes(serverUrl), true);
+            assert.equal((request.post.getCall(0).args[0].indexOf(serverUrl) > -1), true);
         });
         it('request should not have header host value', function () {
             client.sessionServiceRequest();
@@ -193,7 +193,7 @@ describe('Test without private IP', function () {
     describe('validateAccessToken', function () {
         it('request should have serverUrl in url', function () {
             client.validateAccessToken();
-            assert.equal(request.get.getCall(0).args[0].includes(serverUrl), true);
+            assert.equal((request.get.getCall(0).args[0].indexOf(serverUrl) > -1), true);
         });
         it('request should not have header host value', function () {
             client.validateAccessToken();
@@ -203,7 +203,7 @@ describe('Test without private IP', function () {
     describe('getProfile', function () {
         it('request should have serverUrl in url', function () {
             client.getProfile();
-            assert.equal(request.get.getCall(0).args[0].includes(serverUrl), true);
+            assert.equal((request.get.getCall(0).args[0].indexOf(serverUrl) > -1), true);
         });
         it('request should not have header host value', function () {
             client.getProfile();
