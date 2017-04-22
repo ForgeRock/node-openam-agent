@@ -108,7 +108,7 @@ describe('Test with private IP', function () {
         });
     });
 });
-describe('Test with private IP', function () {
+describe('Test without private IP', function () {
     var hostname, serverUrl;
 
     beforeEach(function () {
