@@ -136,9 +136,9 @@ describe('Test without private IP', function () {
             client.getServerInfo();
             assert.equal(request.get.getCall(0).args[0].includes(serverUrl), true);
         });
-        it('request should have header host value', function () {
+        it('request should not have header host value', function () {
             client.getServerInfo();
-            assert.equal(request.get.getCall(0).args[1].headers.host, hostname);
+            assert.equal(request.get.getCall(0).args[1].headers.host, undefined);
         });
     });
     describe('authenticate', function () {
@@ -146,49 +146,49 @@ describe('Test without private IP', function () {
             client.authenticate();
             assert.equal(request.post.getCall(0).args[0].includes(serverUrl), true);
         });
-        it('request should have header host value', function () {
+        it('request should not have header host value', function () {
             client.authenticate();
-            assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
+            assert.equal(request.post.getCall(0).args[1].headers.host, undefined);
         });
     });
     describe('logout', function () {
-        it('request should have serverUrl in url', function () {
+        it('request should not have serverUrl in url', function () {
             client.logout('sessionid');
             assert.equal(request.post.getCall(0).args[0].includes(serverUrl), true);
         });
-        it('request should have header host value', function () {
+        it('request should not have header host value', function () {
             client.logout('sessionid');
-            assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
+            assert.equal(request.post.getCall(0).args[1].headers.host, undefined);
         });
     });
     describe('validateSession', function () {
-        it('request should have serverUrl in url', function () {
+        it('request should not have serverUrl in url', function () {
             client.validateSession('sessionid');
             assert.equal(request.post.getCall(0).args[0].includes(serverUrl), true);
         });
-        it('request should have header host value', function () {
+        it('request should not have header host value', function () {
             client.validateSession('sessionid');
-            assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
+            assert.equal(request.post.getCall(0).args[1].headers.host, undefined);
         });
     });
     describe('getPolicyDecision', function () {
-        it('request should have serverUrl in url', function () {
+        it('request should not have serverUrl in url', function () {
             client.getPolicyDecision({}, 'sessionID', 'cookieName');
             assert.equal(request.post.getCall(0).args[0].includes(serverUrl), true);
         });
-        it('request should have header host value', function () {
+        it('request should not have header host value', function () {
             client.getPolicyDecision({}, 'sessionID', 'cookieName');
-            assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
+            assert.equal(request.post.getCall(0).args[1].headers.host, undefined);
         });
     });
     describe('sessionServiceRequest', function () {
-        it('request should have serverUrl in url', function () {
+        it('request should not have serverUrl in url', function () {
             client.sessionServiceRequest();
             assert.equal(request.post.getCall(0).args[0].includes(serverUrl), true);
         });
-        it('request should have header host value', function () {
+        it('request should not have header host value', function () {
             client.sessionServiceRequest();
-            assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
+            assert.equal(request.post.getCall(0).args[1].headers.host, undefined);
         });
     });
     describe('validateAccessToken', function () {
@@ -196,9 +196,9 @@ describe('Test without private IP', function () {
             client.validateAccessToken();
             assert.equal(request.get.getCall(0).args[0].includes(serverUrl), true);
         });
-        it('request should have header host value', function () {
+        it('request should not have header host value', function () {
             client.validateAccessToken();
-            assert.equal(request.get.getCall(0).args[1].headers.host, hostname);
+            assert.equal(request.get.getCall(0).args[1].headers.host, undefined);
         });
     });
     describe('getProfile', function () {
@@ -206,9 +206,9 @@ describe('Test without private IP', function () {
             client.getProfile();
             assert.equal(request.get.getCall(0).args[0].includes(serverUrl), true);
         });
-        it('request should have header host value', function () {
+        it('request should not have header host value', function () {
             client.getProfile();
-            assert.equal(request.get.getCall(0).args[1].headers.host, hostname);
+            assert.equal(request.get.getCall(0).args[1].headers.host, undefined);
         });
     });
 });
