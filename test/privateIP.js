@@ -3,17 +3,17 @@ var sinon = require('sinon'),
     request = require('request-promise'),
     OpenAMClient = require('../lib/openam').OpenAMClient;
 
-describe('PolicyAgent', function () {
-    var serverHost, serverUrl, privateIP;
+describe('Test with private IP', function () {
+    var hostname, serverUrl, privateIP;
 
     beforeEach(function () {
 
         serverUrl = 'http://openam.example.com:8080/openam';
-        serverHost = 'openam.example.com';
-        privateIP = 'http://127.0.0.1:8080/openam';
+        hostname = 'openam.example.com';
+        privateIP = '127.0.0.1';
 
         // client instance
-        client = new OpenAMClient(serverUrl, serverHost, privateIP);
+        client = new OpenAMClient(serverUrl, privateIP);
 
         // spies
         getRequests = sinon.spy(request, 'get');
@@ -28,51 +28,187 @@ describe('PolicyAgent', function () {
     });
 
     describe('getServerInfo', function () {
+        it('request should have private ip in url', function () {
+            client.getServerInfo();
+            assert.equal(request.get.getCall(0).args[0].includes(privateIP), true);
+        });
         it('request should have header host value', function () {
             client.getServerInfo();
-            assert.equal(request.get.getCall(0).args[1].headers.host, serverHost);
+            assert.equal(request.get.getCall(0).args[1].headers.host, hostname);
         });
     });
     describe('authenticate', function () {
+        it('request should have private ip in url', function () {
+            client.authenticate();
+            assert.equal(request.post.getCall(0).args[0].includes(privateIP), true);
+        });
         it('request should have header host value', function () {
             client.authenticate();
-            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost);
+            assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
         });
     });
     describe('logout', function () {
+        it('request should have private ip in url', function () {
+            client.logout('sessionid');
+            assert.equal(request.post.getCall(0).args[0].includes(privateIP), true);
+        });
         it('request should have header host value', function () {
-            client.logout('sessionID');
-            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost);
+            client.logout('sessionid');
+            assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
         });
     });
     describe('validateSession', function () {
+        it('request should have private ip in url', function () {
+            client.validateSession('sessionid');
+            assert.equal(request.post.getCall(0).args[0].includes(privateIP), true);
+        });
         it('request should have header host value', function () {
-            client.validateSession('sessionID');
-            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost);
+            client.validateSession('sessionid');
+            assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
         });
     });
     describe('getPolicyDecision', function () {
+        it('request should have private ip in url', function () {
+            client.getPolicyDecision(null, 'sessionId', 'cookieName');
+            assert.equal(request.post.getCall(0).args[0].includes(privateIP), true);
+        });
         it('request should have header host value', function () {
-            client.getPolicyDecision({},'sessionID', 'cookieName');
-            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost);
+            client.getPolicyDecision(null, 'sessionId', 'cookieName');
+            assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
         });
     });
     describe('sessionServiceRequest', function () {
+        it('request should have private ip in url', function () {
+            client.sessionServiceRequest('requestSet');
+            assert.equal(request.post.getCall(0).args[0].includes(privateIP), true);
+        });
         it('request should have header host value', function () {
-            client.sessionServiceRequest();
-            assert.equal(request.post.getCall(0).args[1].headers.host, serverHost);
+            client.sessionServiceRequest('requestSet');
+            assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
         });
     });
     describe('validateAccessToken', function () {
+        it('request should have private ip in url', function () {
+            client.validateAccessToken('accessToken');
+            assert.equal(request.get.getCall(0).args[0].includes(privateIP), true);
+        });
         it('request should have header host value', function () {
-            client.validateAccessToken();
-            assert.equal(request.get.getCall(0).args[1].headers.host, serverHost);
+            client.validateAccessToken('accessToken');
+            assert.equal(request.get.getCall(0).args[1].headers.host, hostname);
         });
     });
     describe('getProfile', function () {
+        it('request should have private ip in url', function () {
+            client.getProfile('userId', 'realm', 'sessionId', 'cookieName');
+            assert.equal(request.get.getCall(0).args[0].includes(privateIP), true);
+        });
         it('request should have header host value', function () {
-            client.getProfile();
-            assert.equal(request.get.getCall(0).args[1].headers.host, serverHost);
+            client.getProfile('userId', 'realm', 'sessionId', 'cookieName');
+            assert.equal(request.get.getCall(0).args[1].headers.host, hostname);
+        });
+    });
+});
+describe('Test with private IP', function () {
+    var hostname, serverUrl;
+
+    beforeEach(function () {
+
+        serverUrl = 'http://openam.example.com:8080/openam';
+        hostname = 'openam.example.com';
+
+        // client instance
+        client = new OpenAMClient(serverUrl);
+
+        // spies
+        getRequests = sinon.spy(request, 'get');
+        postRequests = sinon.spy(request, 'post');
+
+    });
+
+    afterEach(function () {
+        // restore stubs
+        getRequests.restore();
+        postRequests.restore();
+    });
+
+    describe('getServerInfo', function () {
+        it('request should have serverUrl in url', function () {
+            client.getServerInfo();
+            assert.equal(request.get.getCall(0).args[0].includes(serverUrl), true);
+        });
+        it('request should have header host value', function () {
+            client.getServerInfo();
+            assert.equal(request.get.getCall(0).args[1].headers.host, hostname);
+        });
+    });
+    describe('authenticate', function () {
+        it('request should have serverUrl in url', function () {
+            client.authenticate();
+            assert.equal(request.post.getCall(0).args[0].includes(serverUrl), true);
+        });
+        it('request should have header host value', function () {
+            client.authenticate();
+            assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
+        });
+    });
+    describe('logout', function () {
+        it('request should have serverUrl in url', function () {
+            client.logout('sessionid');
+            assert.equal(request.post.getCall(0).args[0].includes(serverUrl), true);
+        });
+        it('request should have header host value', function () {
+            client.logout('sessionid');
+            assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
+        });
+    });
+    describe('validateSession', function () {
+        it('request should have serverUrl in url', function () {
+            client.validateSession('sessionid');
+            assert.equal(request.post.getCall(0).args[0].includes(serverUrl), true);
+        });
+        it('request should have header host value', function () {
+            client.validateSession('sessionid');
+            assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
+        });
+    });
+    describe('getPolicyDecision', function () {
+        it('request should have serverUrl in url', function () {
+            client.getPolicyDecision(null, 'sessionId', 'cookieName');
+            assert.equal(request.post.getCall(0).args[0].includes(serverUrl), true);
+        });
+        it('request should have header host value', function () {
+            client.getPolicyDecision(null, 'sessionId', 'cookieName');
+            assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
+        });
+    });
+    describe('sessionServiceRequest', function () {
+        it('request should have serverUrl in url', function () {
+            client.sessionServiceRequest('requestSet');
+            assert.equal(request.post.getCall(0).args[0].includes(serverUrl), true);
+        });
+        it('request should have header host value', function () {
+            client.sessionServiceRequest('requestSet');
+            assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
+        });
+    });
+    describe('validateAccessToken', function () {
+        it('request should have serverUrl in url', function () {
+            client.validateAccessToken('accessToken');
+            assert.equal(request.get.getCall(0).args[0].includes(serverUrl), true);
+        });
+        it('request should have header host value', function () {
+            client.validateAccessToken('accessToken');
+            assert.equal(request.get.getCall(0).args[1].headers.host, hostname);
+        });
+    });
+    describe('getProfile', function () {
+        it('request should have serverUrl in url', function () {
+            client.getProfile('userId', 'realm', 'sessionId', 'cookieName');
+            assert.equal(request.get.getCall(0).args[0].includes(serverUrl), true);
+        });
+        it('request should have header host value', function () {
+            client.getProfile('userId', 'realm', 'sessionId', 'cookieName');
+            assert.equal(request.get.getCall(0).args[1].headers.host, hostname);
         });
     });
 });
