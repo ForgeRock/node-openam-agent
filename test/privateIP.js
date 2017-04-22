@@ -69,21 +69,21 @@ describe('Test with private IP', function () {
     });
     describe('getPolicyDecision', function () {
         it('request should have private ip in url', function () {
-            client.getPolicyDecision(null, 'sessionId', 'cookieName');
+            client.getPolicyDecision({}, 'sessionId', 'cookieName');
             assert.equal(request.post.getCall(0).args[0].includes(privateIP), true);
         });
         it('request should have header host value', function () {
-            client.getPolicyDecision(null, 'sessionId', 'cookieName');
+            client.getPolicyDecision({}, 'sessionId', 'cookieName');
             assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
         });
     });
     describe('sessionServiceRequest', function () {
         it('request should have private ip in url', function () {
-            client.sessionServiceRequest('requestSet');
+            client.sessionServiceRequest();
             assert.equal(request.post.getCall(0).args[0].includes(privateIP), true);
         });
         it('request should have header host value', function () {
-            client.sessionServiceRequest('requestSet');
+            client.sessionServiceRequest();
             assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
         });
     });
@@ -173,21 +173,21 @@ describe('Test without private IP', function () {
     });
     describe('getPolicyDecision', function () {
         it('request should have serverUrl in url', function () {
-            client.getPolicyDecision(null, 'sessionId', 'cookieName');
+            client.getPolicyDecision({}, 'sessionId', 'cookieName');
             assert.equal(request.post.getCall(0).args[0].includes(serverUrl), true);
         });
         it('request should have header host value', function () {
-            client.getPolicyDecision(null, 'sessionId', 'cookieName');
+            client.getPolicyDecision({}, 'sessionId', 'cookieName');
             assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
         });
     });
     describe('sessionServiceRequest', function () {
         it('request should have serverUrl in url', function () {
-            client.sessionServiceRequest('requestSet');
+            client.sessionServiceRequest();
             assert.equal(request.post.getCall(0).args[0].includes(serverUrl), true);
         });
         it('request should have header host value', function () {
-            client.sessionServiceRequest('requestSet');
+            client.sessionServiceRequest();
             assert.equal(request.post.getCall(0).args[1].headers.host, hostname);
         });
     });
