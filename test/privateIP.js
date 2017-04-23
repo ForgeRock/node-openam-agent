@@ -15,9 +15,9 @@ describe('Test with private IP', function () {
         // client instance
         clientIP = new OpenAMClient(serverUrl, privateIP);
 
-        // spies
-        getRequests = sinon.spy(request, 'get');
-        postRequests = sinon.spy(request, 'post');
+        // stubs
+        getRequests = sinon.stub(request, 'get');
+        postRequests = sinon.stub(request, 'post');
 
     });
 
@@ -118,9 +118,9 @@ describe('Test without private IP', function () {
         // client instance
         client = new OpenAMClient(serverUrl);
 
-        // spies
-        getRequests = sinon.spy(request, 'get');
-        postRequests = sinon.spy(request, 'post');
+        // stubs
+        getRequests = sinon.stub(request, 'get');
+        postRequests = sinon.stub(request, 'post');
 
     });
 
