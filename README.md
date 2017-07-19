@@ -9,7 +9,7 @@ You can find howtos and API docs in the [wiki](https://github.com/ForgeRock/node
 ## Installation
 
 ```
-npm i openam-agent
+npm i @forgerock/openam-agent
 ```
 
 ## JSDoc

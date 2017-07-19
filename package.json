@@ -8,15 +8,15 @@
     "test": "mocha",
     "jsdoc": "jsdoc -c jsdoc.json -r"
   },
-  "author": "Zoltan Tarcsay <tarcsay.zoltan@gmail.com>",
+  "author": "Zoltan Tarcsay <zoltan.tarcsay@forgerock.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zoltantarcsay/node-openam-agent.git"
+    "url": "https://github.com/ForgeRock/node-openam-agent.git"
   },
   "bugs": {
-    "url": "https://github.com/zoltantarcsay/node-openam-agent/issues"
+    "url": "https://github.com/ForgeRock/node-openam-agent/issues"
   },
-  "homepage": "https://github.com/zoltantarcsay/node-openam-agent",
+  "homepage": "https://github.com/ForgeRock/node-openam-agent/wiki",
   "license": "MIT",
   "keywords": [
     "OpenAM",
@@ -24,16 +24,16 @@
     "Agent"
   ],
   "dependencies": {
+    "@forgerock/openam-agent-cache-simple": "^2.0.0",
     "assert": "^1.4.1",
-    "basic-auth": "^1.0.3",
-    "bluebird": "^3.4.6",
-    "body-parser": "^1.13.3",
+    "basic-auth": "^1.1.0",
+    "bluebird": "^3.5.0",
+    "body-parser": "^1.17.2",
     "cookie": "^0.2.0",
-    "express": "^4.13.3",
-    "handlebars": "^4.0.5",
-    "openam-agent-cache-simple": "^1.0.1",
+    "express": "^4.15.3",
+    "handlebars": "^4.0.10",
     "request-promise": "^0.4.3",
-    "shortid": "^2.2.2",
+    "shortid": "^2.2.8",
     "shutdown-handler": "^1.0.1",
     "util": "^0.10.3",
     "winston": "^1.0.2",
@@ -41,11 +41,11 @@
     "xmlbuilder": "^2.6.4"
   },
   "devDependencies": {
-    "jsdoc": "^3.4.0",
+    "jsdoc": "^3.5.3",
     "mocha": "^2.3.0",
     "should": "^8.0.2",
     "should-sinon": "0.0.3",
-    "sinon": "^1.16.1"
+    "sinon": "^1.17.7"
   },
   "engines": {
     "node": ">=0.11"

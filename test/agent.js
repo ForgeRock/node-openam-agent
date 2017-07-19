@@ -4,7 +4,7 @@ var fs = require('fs'),
     request = require('request-promise'),
     openamAgent = require('../lib'),
     PolicyAgent = require('../lib/agent').PolicyAgent,
-    SimpleCache = require('openam-agent-cache-simple').SimpleCache;
+    SimpleCache = require('@forgerock/openam-agent-cache-simple').SimpleCache;
 
 require('should-sinon');
 
