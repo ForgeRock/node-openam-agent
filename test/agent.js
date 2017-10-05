@@ -15,7 +15,8 @@ describe('PolicyAgent', function () {
         options = {
             noInit: true,
             logLevel: 'none', // suppress logs for tests
-            serverUrl: 'http://openam.example.com:8080/openam'
+            serverUrl: 'http://openam.example.com:8080/openam',
+            letClientHandleDenial:true
         };
 
         // agent instance
@@ -117,4 +118,24 @@ describe('PolicyAgent', function () {
                 });
         });
     });
+
+    describe('.shield', function(done){
+        it("should return a function", function(){
+            var req = {}, resp={};
+            var error = {message:"Something went wrong"};
+            var valObj = {
+                evaluate: function(req, res){
+                    return Promise.reject(error);
+                }
+            };
+            var middlewareFunction = agent.shield(valObj);
+            should(middlewareFunction).be.a.function;
+            var middleSpy = function(arg1){
+                should(arg1).be.equal(error);
+                done;
+            };
+            middlewareFunction(req, resp, middleSpy);
+        });
+    });
+
 });

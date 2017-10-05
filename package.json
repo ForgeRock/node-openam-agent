@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "demo": "node test/server.js",
-    "test": "mocha",
+    "test": "./node_modules/.bin/mocha",
     "jsdoc": "jsdoc -c jsdoc.json -r"
   },
   "author": "Zoltan Tarcsay <zoltan.tarcsay@forgerock.com>",
@@ -42,7 +42,6 @@
   },
   "devDependencies": {
     "jsdoc": "^3.5.3",
-    "mocha": "^2.3.0",
     "should": "^8.0.2",
     "should-sinon": "0.0.3",
     "sinon": "^1.17.7"
