@@ -1,6 +1,6 @@
 {
   "name": "@forgerock/openam-agent",
-  "version": "4.0.1",
+  "version": "4.0.3",
   "description": "OpenAM Policy Agent implementation for Express",
   "main": "lib/index.js",
   "scripts": {
