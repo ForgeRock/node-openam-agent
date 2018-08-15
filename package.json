@@ -45,7 +45,6 @@
   "devDependencies": {
     "jsdoc": "^3.5.3",
     "mocha": "^5.2.0",
-    "nsp": "^3.2.1",
     "should": "^8.0.2",
     "should-sinon": "0.0.3",
     "sinon": "^1.17.7"
