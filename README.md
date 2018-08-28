@@ -1,6 +1,6 @@
-# node-openam-agent [![Build Status](https://travis-ci.org/ForgeRock/node-openam-agent.svg?branch=master)](https://travis-ci.org/ForgeRock/node-openam-agent) [![npm version](https://badge.fury.io/js/openam-agent.svg)](http://badge.fury.io/js/openam-agent)
+# node-openam-agent [![Build Status](https://travis-ci.org/ForgeRock/node-openam-agent.svg?branch=master)](https://travis-ci.org/ForgeRock/node-openam-agent) [![npm version](https://badge.fury.io/js/%40forgerock%2Fopenam-agent.svg)](http://badge.fury.io/js/%40forgerock%2Fopenam-agent)
 
-> [OpenAM](https://backstage.forgerock.com/docs/am/5.1/quick-start-guide) Policy Agent for [express](http://expressjs.com/) applications.
+> [OpenAM](https://backstage.forgerock.com/docs/am/6/quick-start-guide) Policy Agent for [express](http://expressjs.com/) applications.
 
 ## Documentation
 
