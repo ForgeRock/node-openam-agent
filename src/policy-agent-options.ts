@@ -81,10 +81,10 @@ export interface PolicyAgentOptions {
   /**
    * If true, the agent will not fetch the AM server info on instantiation (default: false)
    */
-  noInit: boolean;
+  noInit?: boolean;
 
   /**
    * Enables session notifications; AM must be able to reach this agent via HTTP to send the notification
    */
-  notificationsEnabled: boolean;
+  notificationsEnabled?: boolean;
 }

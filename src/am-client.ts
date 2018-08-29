@@ -3,9 +3,6 @@ import * as url from 'url';
 import Axios from 'axios';
 import * as shortid from 'shortid';
 
-/**
- * The shape of the data returned by AM's serverinfo endpoint (not complete, just the props we need)
- */
 export interface AmServerInfo {
   cookieName: string;
   domains: string[];

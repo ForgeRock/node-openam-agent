@@ -1,10 +1,10 @@
 import * as cookie from 'cookie';
+import { EventEmitter } from 'events';
 import { NextFunction } from 'express-serve-static-core';
 import * as fs from 'fs';
 import * as Handlebars from 'handlebars';
 import { IncomingMessage, ServerResponse } from 'http';
 import * as ShortId from 'shortid';
-import * as ShutdownHandler from 'shutdown-handler';
 import * as XMLBuilder from 'xmlbuilder';
 import { LoggerInstance } from 'winston';
 import { RequestHandler, Response, Router } from 'express';
@@ -52,7 +52,7 @@ export const NOTIFICATION_PATH = '/agent/notifications';
  *
  * app.listen(8080);
  */
-export class PolicyAgent extends NodeJS.EventEmitter {
+export class PolicyAgent extends EventEmitter {
   public readonly id = ShortId.generate();
   public amClient: AmClient;
   public logger: LoggerInstance;
@@ -64,7 +64,7 @@ export class PolicyAgent extends NodeJS.EventEmitter {
   private cdssoPath = CDSSO_PATH;
   private notificationPath = NOTIFICATION_PATH;
 
-  constructor(private options: PolicyAgentOptions) {
+  constructor(readonly options: PolicyAgentOptions) {
     super();
 
     const { openAMClient, serverUrl, privateIP, logger, logLevel, sessionCache } = options;
@@ -519,12 +519,17 @@ export class PolicyAgent extends NodeJS.EventEmitter {
 
   /**
    * Registers a process exit hook to call destroy() before exiting
+   * Shutdown-handler registers hooks when it's required, which causes the tests to hang
    */
   protected registerShutdownHandler() {
-    ShutdownHandler.on('exit', async (event: { preventDefault: () => void }) => {
+    if (process.env.NODE_ENV === 'test') {
+      return;
+    }
+
+    import('shutdown-handler').on('exit', async (event: { preventDefault: () => void }) => {
       event.preventDefault();
       await this.destroy();
-      process.exit(0);
+      process.exit();
     });
   }
 

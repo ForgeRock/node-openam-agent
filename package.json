@@ -20,7 +20,7 @@
   "scripts": {
     "prebuild": "rm -rf dist",
     "build": "tsc",
-    "test": "mocha"
+    "test": "jest"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -38,23 +38,33 @@
   },
   "devDependencies": {
     "@types/basic-auth": "^1.1.2",
-    "@types/exit-hook": "^1.1.0",
     "@types/express": "^4.16.0",
     "@types/handlebars": "^4.0.39",
+    "@types/jest": "^23.3.1",
     "@types/node": "^10.9.2",
-    "@types/request-promise": "^4.1.42",
     "@types/shortid": "0.0.29",
     "@types/winston": "^2.3.9",
     "@types/xml2js": "^0.4.3",
-    "mocha": "^5.2.0",
-    "should": "^8.0.2",
-    "should-sinon": "0.0.3",
-    "sinon": "^1.17.7",
+    "jest": "^23.5.0",
+    "ts-jest": "^23.1.4",
     "typescript": "^3.0.1"
   },
   "engines": {
-    "node": ">=0.11"
+    "node": ">=6"
   },
   "main": "dist/index.js",
-  "typings": "dist/index.d.ts"
+  "typings": "dist/index.d.ts",
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".spec.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "coverageDirectory": "../coverage"
+  }
 }
