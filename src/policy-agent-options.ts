@@ -1,6 +1,6 @@
 import { LoggerInstance } from 'winston';
-import { AmClient } from '../am-client';
-import { SessionCache } from './session-cache';
+import { AmClient } from './am-client';
+import { Cache } from './cache/cache';
 
 export interface EvaluationErrorDetails {
   status: number;
@@ -65,7 +65,7 @@ export interface PolicyAgentOptions {
    * Custom session cache object (if undefined, a SimpleCache instance will be
    * created with an expiry time of 5 minutes)
    */
-  sessionCache?: SessionCache;
+  sessionCache?: Cache;
 
   /**
    * When set to true if an error arises then next() will be called, allowing the client application to handle the

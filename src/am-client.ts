@@ -4,6 +4,27 @@ import Axios from 'axios';
 import * as shortid from 'shortid';
 
 /**
+ * The shape of the data returned by AM's serverinfo endpoint (not complete, just the props we need)
+ */
+export interface AmServerInfo {
+  cookieName: string;
+  domains: string[];
+}
+
+export interface AmPolicyDecisionRequest {
+  resources: string[];
+  application: string;
+  subject: { ssoToken: string };
+}
+
+export interface AmPolicyDecision {
+  resource: string;
+  actions: { [ action: string ]: boolean; };
+  attributes: { [ attribute: string ]: string[]; };
+  advices: any;
+}
+
+/**
  * ForgeRock OpenAM / Access Management client
  * Supports OpenAM 13 and above. Policy decisions via REST are only available in 13.5 and above.
  */
@@ -26,7 +47,7 @@ export class AmClient {
   /**
    * Gets the results of /json/serverinfo/*
    */
-  getServerInfo(): Promise<{ cookieName: string }> {
+  getServerInfo(): Promise<AmServerInfo> {
     return Axios
       .get(
         this.serverAddress + '/json/serverinfo/*',
@@ -145,9 +166,12 @@ export class AmClient {
    * It needs a valid sessionId and cookieName in order to make the request. (The user to whom the session belongs needs
    * to have the REST calls for policy evaluation privilege in OpenAM.
    */
-  getPolicyDecision(params: any, sessionId: string, cookieName: string, realm = '/'): Promise<any> {
+  getPolicyDecision(data: AmPolicyDecisionRequest,
+                    sessionId: string,
+                    cookieName: string,
+                    realm = '/'): Promise<AmPolicyDecision[]> {
     return Axios
-      .post(this.serverAddress + '/json/policies', params, {
+      .post(this.serverAddress + '/json/policies', data, {
         headers: {
           [ cookieName ]: sessionId,
           host: this.hostname

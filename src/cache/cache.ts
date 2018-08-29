@@ -1,4 +1,4 @@
-export interface SessionCache<T = any> {
+export interface Cache<T = any> {
   get(key: string): Promise<T>;
 
   put(key: string, value: T): Promise<void>;

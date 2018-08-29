@@ -2,7 +2,7 @@ import * as cookie from 'cookie';
 import { NextFunction } from 'express-serve-static-core';
 import * as fs from 'fs';
 import * as Handlebars from 'handlebars';
-import { IncomingMessage, OutgoingMessage } from 'http';
+import { IncomingMessage, ServerResponse } from 'http';
 import * as ShortId from 'shortid';
 import * as ShutdownHandler from 'shutdown-handler';
 import * as XMLBuilder from 'xmlbuilder';
@@ -10,15 +10,15 @@ import { LoggerInstance } from 'winston';
 import { RequestHandler, Response, Router } from 'express';
 import * as BodyParser from 'body-parser';
 
-import { AmClient } from './am-client';
-import { InMemoryCache } from './in-memory-cache';
-import { Logger } from './logger';
-import { EvaluationErrorDetails, PolicyAgentOptions } from './model/policy-agent-options';
-import { SessionCache } from './model/session-cache';
-import { InvalidSessionError } from './invalid-session-error';
-import { Shield } from './shield';
-import { sendResponse, baseUrl } from './http-utils';
-import { parseXml } from './utils';
+import { AmClient, AmPolicyDecision, AmPolicyDecisionRequest, AmServerInfo } from './am-client';
+import { InMemoryCache } from './cache/in-memory-cache';
+import { Logger } from './utils/logger';
+import { EvaluationErrorDetails, PolicyAgentOptions } from './policy-agent-options';
+import { Cache } from './cache/cache';
+import { InvalidSessionError } from './error/invalid-session-error';
+import { Shield } from './shield/shield';
+import { sendResponse, baseUrl } from './utils/http-utils';
+import { parseXml } from './utils/xml-utils';
 
 const pkg = require('../package.json');
 
@@ -30,32 +30,25 @@ export const NOTIFICATION_PATH = '/agent/notifications';
  * Policy Agent
  *
  * @example
- * const express = require('express'),
- *     openamAgent = require('openam-agent'),
- *     MemcachedCache = require('openam-agent-cache-memcached'),
- *     PolicyAgent = openamAgent.PolicyAgent,
- *     CookieShield = openamAgent.CookieShield;
+ * import express from 'express';
+ * import {PolicyAgent, CookieShield} from '@forgerock/openam-agent';
  *
  * const config = {
  *    serverUrl: 'http://openam.example.com:8080/openam',
  *    appUrl: 'http://app.example.com:8080',
- *    notificationRoute: '/',
  *    notificationsEnabled: true,
  *    username: 'my-agent',
  *    password: 'changeit',
  *    realm: '/',
  *    logLevel: 'info',
- *    errorPage: ({status, message, details}) =>
- *        return '<html><body><h1>' + status + ' - '  + message + '</h1></body></html>',
- *    letClientHandleErrors:false
- *    }
+ *    errorPage: ({status, message, details}) => `<html><body><h1>${status} - ${message }</h1></body></html>`
  * };
  *
- * var agent = new PolicyAgent(config);
- * var app = express();
+ * const agent = new PolicyAgent(config);
+ * const app = express();
  *
  * app.use(agent.shield(new CookieShield()));
- * app.use('/foo/bar/baz', agent.notifications);
+ * app.use(agent.notifications);
  *
  * app.listen(8080);
  */
@@ -63,9 +56,9 @@ export class PolicyAgent extends NodeJS.EventEmitter {
   public readonly id = ShortId.generate();
   public amClient: AmClient;
   public logger: LoggerInstance;
-  public sessionCache: SessionCache;
+  public sessionCache: Cache;
 
-  private serverInfo?: Promise<{ cookieName: string }>;
+  private serverInfo?: Promise<AmServerInfo>;
   private agentSession?: Promise<{ tokenId: string }>;
   private errorTemplate: (details: EvaluationErrorDetails) => string;
   private cdssoPath = CDSSO_PATH;
@@ -88,7 +81,10 @@ export class PolicyAgent extends NodeJS.EventEmitter {
     this.logger.info('Agent initialized.');
   }
 
-  getServerInfo() {
+  /**
+   * Returns the cached AM server info (cookie name & domain list)
+   */
+  getServerInfo(): Promise<AmServerInfo> {
     if (!this.serverInfo) {
       this.serverInfo = this.amClient.getServerInfo();
     }
@@ -128,14 +124,16 @@ export class PolicyAgent extends NodeJS.EventEmitter {
   /**
    * Retry sending a request a specified number of times. If the response status is 401, renew the agent session
    */
-  async reRequest(request: () => Promise<any>, attemptLimit = 1, name: string = '') {
+  async reRequest<T = any>(request: () => Promise<T>, attemptLimit = 1, name: string = 'reRequest'): Promise<T> {
     let attemptCount = 0;
 
     while (attemptCount < attemptLimit) {
       try {
-        await request();
+        return await request();
       } catch (err) {
         attemptCount++;
+        this.logger.debug(`PolicyAgent: ${name} - caught error ${err.message}`, err);
+        this.logger.info(`PolicyAgent: ${name} - retrying request - attempt ${attemptCount} of ${attemptLimit}`);
         // renew agent session on 401 response
         if (err instanceof InvalidSessionError || err.response.status === 401) {
           this.agentSession = this.authenticateAgent();
@@ -221,11 +219,11 @@ export class PolicyAgent extends NodeJS.EventEmitter {
   /**
    * Gets policy decisions from OpenAM. The application name specified in the agent config.
    */
-  async getPolicyDecision(params: any): Promise<any> {
+  async getPolicyDecision(data: AmPolicyDecisionRequest): Promise<AmPolicyDecision[]> {
     const { cookieName } = await this.getServerInfo();
     const { tokenId } = await this.getAgentSession();
-    return this.reRequest(
-      () => this.amClient.getPolicyDecision(params, tokenId, cookieName, this.options.realm),
+    return this.reRequest<AmPolicyDecision[]>(
+      () => this.amClient.getPolicyDecision(data, tokenId, cookieName, this.options.realm),
       5,
       'getPolicyDecision'
     );
@@ -258,17 +256,15 @@ export class PolicyAgent extends NodeJS.EventEmitter {
    * server.listen(3000);
    */
   shield(shield: Shield): RequestHandler {
-    const agent = this;
-
-    return async function (req: IncomingMessage, res: OutgoingMessage, next: NextFunction) {
+    return async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
       try {
-        const session = await shield.evaluate(req, res, agent);
+        const session = await shield.evaluate(req, res, this);
         req[ 'session' ] = { ...req[ 'session' ], ...session };
         next();
       } catch (err) {
-        agent.logger.info('PolicyAgent#shield: evaluation error (%s)', err.message);
+        this.logger.info('PolicyAgent#shield: evaluation error (%s)', err.message);
 
-        if (agent.options.letClientHandleErrors) {
+        if (this.options.letClientHandleErrors) {
           next(err);
           return;
         }
@@ -278,7 +274,7 @@ export class PolicyAgent extends NodeJS.EventEmitter {
           return;
         }
 
-        const body = agent.errorTemplate({
+        const body = this.errorTemplate({
           status: err.statusCode,
           message: err.message,
           details: err.stack,
@@ -288,7 +284,6 @@ export class PolicyAgent extends NodeJS.EventEmitter {
         sendResponse(res, err.response.status, body, { 'Content-Type': 'text/html' });
       }
     }
-
   }
 
   /**
@@ -404,7 +399,7 @@ export class PolicyAgent extends NodeJS.EventEmitter {
     const router = Router();
 
     router.post(path, BodyParser.text({ type: 'text/xml' }), async (req, res) => {
-      this.logger.silly(`PolicyAgent: notification received: \n ${req.body}`);
+      this.logger.debug(`PolicyAgent: notification received: \n ${req.body}`);
 
       res.send();
 

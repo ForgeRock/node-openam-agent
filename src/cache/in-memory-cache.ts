@@ -1,5 +1,5 @@
 import { LoggerInstance } from 'winston';
-import { SessionCache } from './model/session-cache';
+import { Cache } from './';
 import Timer = NodeJS.Timer;
 
 export interface InMemoryCacheEntry {
@@ -13,7 +13,7 @@ export interface InMemoryCacheEntry {
  * const cache = new InMemoryCache<{bar: string}>({expireAfterSeconds: 600}); // cached entries expire after 10 minutes
  * cache.put('foo', { bar: 'baz' });
  */
-export class InMemoryCache<T = any> implements SessionCache<T> {
+export class InMemoryCache<T = any> implements Cache<T> {
   private readonly keyValueStore = new Map<string, InMemoryCacheEntry>();
   private readonly expireAfterSeconds: number;
   private readonly logger?: LoggerInstance;
