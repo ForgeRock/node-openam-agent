@@ -24,7 +24,6 @@
     "lint": "tslint --format stylish --project tsconfig.json --config tslint.json "
   },
   "dependencies": {
-    "@types/util.promisify": "^1.0.0",
     "axios": "^0.18.0",
     "basic-auth": "^1.1.0",
     "body-parser": "^1.17.2",
@@ -59,6 +58,10 @@
   },
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
   "jest": {
     "moduleFileExtensions": [
       "js",
