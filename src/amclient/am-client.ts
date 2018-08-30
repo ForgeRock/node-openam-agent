@@ -211,7 +211,6 @@ export class AmClient {
    * Gets a user's profile (requires an agent or admin session).
    */
   getProfile(userId: string, realm: string, sessionId: string, cookieName: string): Promise<any> {
-    //noinspection JSValidateTypes
     return Axios
       .get(`${this.serverAddress}/json/users/${userId}`, {
         headers: {
