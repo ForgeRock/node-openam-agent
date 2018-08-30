@@ -2,7 +2,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 import * as url from 'url';
 import { AmPolicyDecision, AmPolicyDecisionRequest, ShieldEvaluationError } from '..';
 
-import { PolicyAgent } from '../policy-agent';
+import { PolicyAgent } from '../policyagent/policy-agent';
 import { SessionData } from './session-data';
 import { Shield } from './shield';
 

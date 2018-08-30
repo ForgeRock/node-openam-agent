@@ -6,21 +6,25 @@ import { NextFunction } from 'express-serve-static-core';
 import * as fs from 'fs';
 import * as Handlebars from 'handlebars';
 import { IncomingMessage, ServerResponse } from 'http';
+import { resolve } from 'path';
 import * as ShortId from 'shortid';
 import { LoggerInstance } from 'winston';
 import * as XMLBuilder from 'xmlbuilder';
 
-import { AmClient, AmPolicyDecision, AmPolicyDecisionRequest, AmServerInfo } from './am-client';
-import { Cache } from './cache/cache';
-import { InMemoryCache } from './cache/in-memory-cache';
-import { InvalidSessionError } from './error/invalid-session-error';
+import { AmClient } from '../amclient/am-client';
+import { AmPolicyDecision } from '../amclient/am-policy-decision';
+import { AmPolicyDecisionRequest } from '../amclient/am-policy-decision-request';
+import { AmServerInfo } from '../amclient/am-server-info';
+import { Cache } from '../cache/cache';
+import { InMemoryCache } from '../cache/in-memory-cache';
+import { InvalidSessionError } from '../error/invalid-session-error';
+import { Shield } from '../shield/shield';
+import { baseUrl, sendResponse } from '../utils/http-utils';
+import { Logger } from '../utils/logger';
+import { parseXml } from '../utils/xml-utils';
 import { EvaluationErrorDetails, PolicyAgentOptions } from './policy-agent-options';
-import { Shield } from './shield/shield';
-import { baseUrl, sendResponse } from './utils/http-utils';
-import { Logger } from './utils/logger';
-import { parseXml } from './utils/xml-utils';
 
-const pkg = require('../package.json');
+const pkg = require('../../package.json');
 
 export const SESSION_EVENT = 'session';
 export const CDSSO_PATH = '/agent/cdsso';
@@ -539,6 +543,6 @@ export class PolicyAgent extends EventEmitter {
    * Compiles the default error page with Handlebars.js
    */
   protected getDefaultErrorTemplate() {
-    return Handlebars.compile(fs.readFileSync(__dirname + '/templates/error.handlebars').toString());
+    return Handlebars.compile(fs.readFileSync(resolve(__dirname, '../templates/error.handlebars')).toString());
   }
 }

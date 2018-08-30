@@ -1,4 +1,4 @@
-import mockAxios from './testing/mock-axios';
+import mockAxios from '../testing/mock-axios';
 import { AmClient } from './am-client';
 
 describe('AmClient', () => {

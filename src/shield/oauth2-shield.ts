@@ -1,6 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { ShieldEvaluationError } from '..';
-import { PolicyAgent } from '../policy-agent';
+import { PolicyAgent } from '../policyagent/policy-agent';
 import { SessionData } from './session-data';
 import { Shield } from './shield';
 
@@ -42,7 +42,7 @@ export class Oauth2Shield implements Shield {
 
       try {
         message = JSON.parse(err.response.body).error_description;
-      } catch (e) {
+      } catch {
         // body is not json
       }
 

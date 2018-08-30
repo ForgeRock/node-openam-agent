@@ -2,7 +2,7 @@ import * as basicAuth from 'basic-auth';
 import { IncomingMessage, ServerResponse } from 'http';
 
 import { ShieldEvaluationError } from '../error/shield-evaluation-error';
-import { PolicyAgent } from '../policy-agent';
+import { PolicyAgent } from '../policyagent/policy-agent';
 import { Deferred } from '../utils/deferred';
 import { sendResponse } from '../utils/http-utils';
 import { SessionData } from './session-data';

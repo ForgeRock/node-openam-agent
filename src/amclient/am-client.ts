@@ -3,23 +3,9 @@ import { OutgoingHttpHeaders } from 'http';
 import * as shortid from 'shortid';
 import * as url from 'url';
 
-export interface AmServerInfo {
-  cookieName: string;
-  domains: string[];
-}
-
-export interface AmPolicyDecisionRequest {
-  resources: string[];
-  application: string;
-  subject: { ssoToken: string };
-}
-
-export interface AmPolicyDecision {
-  resource: string;
-  actions: { [ action: string ]: boolean; };
-  attributes: { [ attribute: string ]: string[]; };
-  advices: any;
-}
+import { AmPolicyDecision } from './am-policy-decision';
+import { AmPolicyDecisionRequest } from './am-policy-decision-request';
+import { AmServerInfo } from './am-server-info';
 
 /**
  * ForgeRock OpenAM / Access Management client
@@ -47,7 +33,7 @@ export class AmClient {
   getServerInfo(): Promise<AmServerInfo> {
     return Axios
       .get(
-        this.serverAddress + '/json/serverinfo/*',
+        `${this.serverAddress}/json/serverinfo/*`,
         { headers: { host: this.hostname } })
       .then(res => res.data);
   }
@@ -75,7 +61,7 @@ export class AmClient {
     }
 
     return Axios
-      .post(this.serverAddress + '/json/authenticate', null, {
+      .post(`${this.serverAddress}/json/authenticate`, null, {
         headers: {
           host: this.hostname,
           'X-OpenAM-Username': username,
@@ -102,7 +88,7 @@ export class AmClient {
     };
 
     return Axios
-      .post(this.serverAddress + '/json/sessions', null, {
+      .post(`${this.serverAddress}/json/sessions`, null, {
         headers,
         params: { realm, _action: 'logout' }
       })
@@ -118,7 +104,7 @@ export class AmClient {
     }
 
     return Axios
-      .post(this.serverAddress + '/json/sessions/' + sessionId, null, {
+      .post(`${this.serverAddress}/json/sessions/${sessionId}`, null, {
         params: { _action: 'validate' },
         headers: {
           'host': this.hostname,
@@ -170,7 +156,7 @@ export class AmClient {
                     cookieName: string,
                     realm = '/'): Promise<AmPolicyDecision[]> {
     return Axios
-      .post(this.serverAddress + '/json/policies', data, {
+      .post(`${this.serverAddress}/json/policies`, data, {
         headers: {
           [ cookieName ]: sessionId,
           host: this.hostname
@@ -191,7 +177,7 @@ export class AmClient {
    */
   sessionServiceRequest(requestSet: string): Promise<any> {
     return Axios
-      .post(this.serverAddress + '/sessionservice', requestSet, {
+      .post(`${this.serverAddress}/sessionservice`, requestSet, {
         headers: {
           host: this.hostname,
           'Content-Type': 'text/xml'
@@ -208,9 +194,8 @@ export class AmClient {
    * @return {Promise} Token info response
    */
   validateAccessToken(accessToken: string, realm = '/'): Promise<any> {
-    //noinspection JSValidateTypes
     return Axios
-      .get(this.serverAddress + '/oauth2/tokeninfo', {
+      .get(`${this.serverAddress}/oauth2/tokeninfo`, {
         headers: {
           host: this.hostname
         },
@@ -228,7 +213,7 @@ export class AmClient {
   getProfile(userId: string, realm: string, sessionId: string, cookieName: string): Promise<any> {
     //noinspection JSValidateTypes
     return Axios
-      .get(this.serverAddress + '/json/users/' + userId, {
+      .get(`${this.serverAddress}/json/users/${userId}`, {
         headers: {
           host: this.hostname,
           cookie: `${cookieName}=${sessionId}`

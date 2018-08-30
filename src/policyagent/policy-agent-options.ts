@@ -1,6 +1,6 @@
 import { LoggerInstance } from 'winston';
-import { AmClient } from './am-client';
-import { Cache } from './cache/cache';
+import { AmClient } from '../amclient/am-client';
+import { Cache } from '../cache/cache';
 
 export interface EvaluationErrorDetails {
   status: number;

@@ -1,6 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'http';
 
-import { PolicyAgent } from '../policy-agent';
+import { PolicyAgent } from '../policyagent/policy-agent';
 import { SessionData } from './session-data';
 
 export interface Shield {

@@ -1,9 +1,9 @@
-import { Shield } from './shield/shield';
-import mockAxios from './testing/mock-axios';
+import { Shield } from '../shield/shield';
+import mockAxios from '../testing/mock-axios';
 
 import { PolicyAgent } from './policy-agent';
 import { PolicyAgentOptions } from './policy-agent-options';
-import { getFixture } from './testing/utils';
+import { getFixture } from '../testing/utils';
 
 describe('PolicyAgent', () => {
   let agent: PolicyAgent;

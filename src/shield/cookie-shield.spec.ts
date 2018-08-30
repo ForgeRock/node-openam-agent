@@ -1,4 +1,4 @@
-import { PolicyAgent } from '../policy-agent';
+import { PolicyAgent } from '../policyagent/policy-agent';
 import { CookieShield } from './cookie-shield';
 import { ServerResponse, IncomingMessage } from 'http';
 
