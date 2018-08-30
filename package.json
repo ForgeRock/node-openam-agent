@@ -24,6 +24,7 @@
     "lint": "tslint --format stylish --project tsconfig.json --config tslint.json "
   },
   "dependencies": {
+    "@types/util.promisify": "^1.0.0",
     "axios": "^0.18.0",
     "basic-auth": "^1.1.0",
     "body-parser": "^1.17.2",
@@ -33,6 +34,7 @@
     "shortid": "^2.2.8",
     "shutdown-handler": "^1.0.1",
     "util": "^0.10.3",
+    "util.promisify": "^1.0.0",
     "winston": "^1.0.2",
     "xml2js": "^0.4.12",
     "xmlbuilder": "^10.0.0"
