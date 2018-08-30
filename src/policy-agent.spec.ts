@@ -1,8 +1,9 @@
-import * as fs from 'fs';
+import { Shield } from './shield/shield';
 import mockAxios from './testing/mock-axios';
 
 import { PolicyAgent } from './policy-agent';
 import { PolicyAgentOptions } from './policy-agent-options';
+import { getFixture } from './testing/utils';
 
 describe('PolicyAgent', () => {
   let agent: PolicyAgent;
@@ -14,8 +15,7 @@ describe('PolicyAgent', () => {
       logLevel: 'none', // suppress logs for tests
       serverUrl: 'http://openam.example.com:8080/openam',
       username: 'test',
-      password: 'test',
-      letClientHandleErrors: true
+      password: 'test'
     };
 
     agent = new PolicyAgent(options);
@@ -34,7 +34,7 @@ describe('PolicyAgent', () => {
     expect(agent.id.match(/[a-z0-9]+/i)).not.toBeNull();
   });
 
-  describe('serverInfo', () => {
+  describe('getServerInfo()', () => {
     it('should get the server info via the AM client', async () => {
       const serverInfoPromise = agent.getServerInfo();
 
@@ -50,7 +50,7 @@ describe('PolicyAgent', () => {
     });
   });
 
-  describe('agentSession', () => {
+  describe('getAgentSession()', () => {
     it('should get the server info via the AM client', async () => {
       const agentSessionPromise = agent.getAgentSession();
 
@@ -66,66 +66,62 @@ describe('PolicyAgent', () => {
     });
   });
 
-  // xit('should remove destroyed sessions on session events', done => {
-  //   const sessionData = { foo: 'bar' };
-  //
-  //   agent.on('session', () => {
-  //     expect(agent.sessionCache.keyValueStore.mock).be.undefined();
-  //     done();
-  //   });
-  //
-  //   agent.sessionCache.put('mock', sessionData);
-  //   agent.sessionCache.get('mock').then(function (data) {
-  //     data.should.toEqual(sessionData);
-  //     agent.emit('session', { state: 'destroyed', sid: 'mock' });
-  //   });
-  // });
-  //
-  // xdescribe('init', () => {
-  //   it('should get the server info', () => {
-  //     agent.init();
-  //     stubRequest.get.should.be.calledWith(options.serverUrl + '/json/serverinfo/*');
-  //   });
-  // });
-  //
-  // xdescribe('.getSessionIdFromLARES()', () => {
-  //   it('should resolve the promise with the session ID if the CDSSO Assertion (LARES) is valid', () => {
-  //     let lares = fs.readFileSync(__dirname + '/resources/validLARES.txt').toString();
-  //     return agent.getSessionIdFromLARES(lares)
-  //       .then(function (sessionId) {
-  //         expect(sessionId).toEqual('foo');
-  //       });
-  //   });
-  //   it('should reject the promise if the CDSSO Assertion (LARES) is invalid', () => {
-  //     let lares = fs.readFileSync(__dirname + '/resources/expiredLARES.txt').toString();
-  //
-  //     return agent.getSessionIdFromLARES(lares)
-  //       .then(function (sessionId) {
-  //         expect(sessionId).toEqual(null);
-  //       }).catch(function (err) {
-  //         expect(err).not.toEqual(undefined);
-  //         expect(err).not.toEqual(null);
-  //       });
-  //   });
-  // });
-  //
-  // xdescribe('.shield', () => {
-  //   it('should return a function', done => {
-  //     let req = {}, resp = {};
-  //     let error = { message: 'Something went wrong' };
-  //     let valObj = {
-  //       evaluate: function (req, res) {
-  //         return Promise.reject(error);
-  //       }
-  //     };
-  //     let middlewareFunction = agent.shield(valObj);
-  //     expect(middlewareFunction).be.a.function;
-  //     let middleSpy = function (arg1) {
-  //       expect(arg1).toEqual(error);
-  //       done;
-  //     };
-  //     middlewareFunction(req, resp, middleSpy);
-  //   });
-  // });
+  it('should remove destroyed sessions on session events', async done => {
+    const sessionData = { foo: 'bar' };
+
+    agent.on('session', () => {
+      agent.sessionCache.get('mock').catch(() => done());
+    });
+
+    await agent.sessionCache.put('mock', sessionData);
+    await agent.sessionCache.get('mock').then(function (data) {
+      expect(data).toEqual(sessionData);
+      agent.emit('session', { state: 'destroyed', sid: 'mock' });
+    });
+
+  });
+
+  describe('getSessionIdFromLARES()', () => {
+    it('should resolve the promise with the session ID if the CDSSO Assertion (LARES) is valid', async () => {
+      const lares = await getFixture('validLARES.txt');
+      const sessionId = await agent.getSessionIdFromLARES(lares);
+      expect(sessionId).toEqual('foo');
+    });
+
+    it('should reject the promise if the CDSSO Assertion (LARES) is invalid', async () => {
+      const lares = await getFixture('expiredLARES.txt');
+      let sessionId, error;
+
+      try {
+        sessionId = await agent.getSessionIdFromLARES(lares);
+      } catch (err) {
+        error = err;
+      }
+
+      expect(sessionId).toBeUndefined();
+      expect(error).toBeTruthy();
+    });
+  });
+
+  describe('shield()', () => {
+    it('should call next() with the original error when letClientHandleErrors is true', done => {
+      agent.options.letClientHandleErrors = true;
+
+      const error = new Error('Boo!');
+      const mockShield: Shield = {
+        evaluate: async () => {
+          throw error;
+        }
+      };
+
+      const next = jest.fn(err => {
+        expect(err).toBe(err);
+        done();
+      });
+
+      const shieldMiddleware = agent.shield(mockShield);
+      shieldMiddleware(<any>{}, <any>{}, next);
+    });
+  });
 
 });

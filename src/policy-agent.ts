@@ -526,7 +526,7 @@ export class PolicyAgent extends EventEmitter {
       return;
     }
 
-    import('shutdown-handler').on('exit', async (event: { preventDefault: () => void }) => {
+    require('shutdown-handler').on('exit', async (event: { preventDefault: () => void }) => {
       event.preventDefault();
       await this.destroy();
       process.exit();

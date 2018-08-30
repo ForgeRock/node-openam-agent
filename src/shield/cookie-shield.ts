@@ -11,23 +11,23 @@ export interface CookieShieldOptions {
   /**
    *  If true, the agent will not redirect to OpenAM's login page for authentication, only return a 401 response
    */
-  noRedirect: boolean;
+  noRedirect?: boolean;
 
   /**
    * If true, the agent will fetch and cache the user's profile when validating the session
    */
-  getProfiles: boolean;
+  getProfiles?: boolean;
 
   /**
    * If true, the shield will not enforce valid sessions. This is useful in conjunction with {getProfiles:true
    * when a route is public but you want fetch identity information for any logged in users.
    */
-  passThrough: boolean;
+  passThrough?: boolean;
 
   /**
    * Enable CDSSO mode (you must also mount the agent.cdsso() middleware to your application)
    */
-  cdsso: boolean;
+  cdsso?: boolean;
 }
 
 /**
@@ -40,7 +40,7 @@ export interface CookieShieldOptions {
  * nor failure.
  */
 export class CookieShield implements Shield {
-  constructor(readonly options: CookieShieldOptions) {}
+  constructor(readonly options: CookieShieldOptions = {}) {}
 
   async evaluate(req: IncomingMessage,
                  res: ServerResponse,
@@ -105,12 +105,12 @@ export class CookieShield implements Shield {
       throw new ShieldEvaluationError(401, 'Unauthorized', 'Invalid session');
     }
 
-    if (await this.checkDomainMismatch(req, agent)) {
+    if (!(await this.checkDomainMatch(req, agent))) {
       throw new ShieldEvaluationError(400, 'Bad Request', 'Domain mismatch');
     }
   }
 
-  private async checkDomainMismatch(req: IncomingMessage, agent: PolicyAgent): Promise<boolean> {
+  private async checkDomainMatch(req: IncomingMessage, agent: PolicyAgent): Promise<boolean> {
     if (this.options.cdsso) {
       return false;
     }

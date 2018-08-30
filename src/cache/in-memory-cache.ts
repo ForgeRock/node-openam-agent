@@ -1,5 +1,5 @@
 import { LoggerInstance } from 'winston';
-import { Cache } from './';
+import { Cache } from './cache';
 import Timer = NodeJS.Timer;
 
 export interface InMemoryCacheEntry {

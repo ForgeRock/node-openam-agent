@@ -30,12 +30,12 @@ export class AmClient {
   serverAddress: string;
   hostname?: string;
 
-  constructor(serverUrl: string, privateIP?: string) {
+  constructor(serverUrl: string, privateIp?: string) {
     this.serverUrl = serverUrl.replace(/\/$/, '');
 
-    if (privateIP) {
+    if (privateIp) {
       this.hostname = url.parse(this.serverUrl).hostname || '';
-      this.serverAddress = this.serverUrl.replace(this.hostname, privateIP);
+      this.serverAddress = this.serverUrl.replace(this.hostname, privateIp);
     } else {
       this.serverAddress = this.serverUrl;
     }
