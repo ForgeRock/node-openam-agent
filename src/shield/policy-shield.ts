@@ -1,5 +1,5 @@
-import * as url from 'url';
 import { IncomingMessage, ServerResponse } from 'http';
+import * as url from 'url';
 import { AmPolicyDecision, AmPolicyDecisionRequest, ShieldEvaluationError } from '..';
 
 import { PolicyAgent } from '../policy-agent';
@@ -35,10 +35,10 @@ export class PolicyShield implements Shield {
       const session = req[ 'session' ] || { data: {} };
       session.data.policies = decision;
       return session;
-    } else {
-      agent.logger.info(`PolicyShield: ${req.url} => deny`);
-      throw new ShieldEvaluationError(403, 'Forbidden', 'You are not authorized to access this resource.');
     }
+
+    agent.logger.info(`PolicyShield: ${req.url} => deny`);
+    throw new ShieldEvaluationError(403, 'Forbidden', 'You are not authorized to access this resource.');
   }
 
   toDecisionParams(req: IncomingMessage, ssoToken: string): AmPolicyDecisionRequest {
@@ -53,7 +53,7 @@ export class PolicyShield implements Shield {
       resources: [ resourceName ],
       application: this.applicationName,
       subject: { ssoToken }
-    }
+    };
   }
 
 }

@@ -12,7 +12,7 @@ export function sendResponse(res: ServerResponse, statusCode: number, body: stri
  * Sends a redirect response
  */
 export function redirect(res: ServerResponse, location: string, permanent = false) {
-  sendResponse(res, permanent ? 301 : 302, null,{Location: location});
+  sendResponse(res, permanent ? 301 : 302, null, { Location: location });
 }
 
 /**

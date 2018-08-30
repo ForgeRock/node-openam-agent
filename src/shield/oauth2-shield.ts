@@ -17,7 +17,7 @@ export class Oauth2Shield implements Shield {
     let tokenInfo: any;
 
     if (accessToken.length) {
-      await this.getTokenInfo(agent, accessToken);
+      tokenInfo = await this.getTokenInfo(agent, accessToken);
     } else {
       agent.logger.info(`OAuth2Shield: ${req.url} => deny`);
       throw new ShieldEvaluationError(401, 'Unauthorized', 'Missing OAuth2 Bearer token');

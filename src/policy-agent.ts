@@ -1,23 +1,23 @@
+import * as BodyParser from 'body-parser';
 import * as cookie from 'cookie';
 import { EventEmitter } from 'events';
+import { RequestHandler, Response, Router } from 'express';
 import { NextFunction } from 'express-serve-static-core';
 import * as fs from 'fs';
 import * as Handlebars from 'handlebars';
 import { IncomingMessage, ServerResponse } from 'http';
 import * as ShortId from 'shortid';
-import * as XMLBuilder from 'xmlbuilder';
 import { LoggerInstance } from 'winston';
-import { RequestHandler, Response, Router } from 'express';
-import * as BodyParser from 'body-parser';
+import * as XMLBuilder from 'xmlbuilder';
 
 import { AmClient, AmPolicyDecision, AmPolicyDecisionRequest, AmServerInfo } from './am-client';
-import { InMemoryCache } from './cache/in-memory-cache';
-import { Logger } from './utils/logger';
-import { EvaluationErrorDetails, PolicyAgentOptions } from './policy-agent-options';
 import { Cache } from './cache/cache';
+import { InMemoryCache } from './cache/in-memory-cache';
 import { InvalidSessionError } from './error/invalid-session-error';
+import { EvaluationErrorDetails, PolicyAgentOptions } from './policy-agent-options';
 import { Shield } from './shield/shield';
-import { sendResponse, baseUrl } from './utils/http-utils';
+import { baseUrl, sendResponse } from './utils/http-utils';
+import { Logger } from './utils/logger';
 import { parseXml } from './utils/xml-utils';
 
 const pkg = require('../package.json');
@@ -189,7 +189,7 @@ export class PolicyAgent extends EventEmitter {
     }
 
     return sessionId;
-  };
+  }
 
   /**
    * Fetches the user profile for a given username (uid) and saves it to the sessionCache.
@@ -283,7 +283,7 @@ export class PolicyAgent extends EventEmitter {
 
         sendResponse(res, err.response.status, body, { 'Content-Type': 'text/html' });
       }
-    }
+    };
   }
 
   /**
@@ -345,7 +345,7 @@ export class PolicyAgent extends EventEmitter {
    * Parses the LARES response (CDSSO Assertion) and returns the Session ID if valid
    */
   async getSessionIdFromLARES(lares: string): Promise<string> {
-    const buffer = new Buffer(lares, 'base64');
+    const buffer = Buffer.from(lares, 'base64');
     const doc: any = await parseXml(buffer.toString());
 
     const assertion = doc[ 'lib:AuthnResponse' ][ 'saml:Assertion' ][ 0 ];
@@ -356,12 +356,14 @@ export class PolicyAgent extends EventEmitter {
     const notOnOrAfter = new Date(conditions.$.NotOnOrAfter);
 
     // check Issuer
-    if (assertion.$.Issuer !== this.options.serverUrl + '/cdcservlet')
-      throw 'Unknown issuer: ' + assertion.$.Issuer;
+    if (assertion.$.Issuer !== this.options.serverUrl + '/cdcservlet') {
+      throw new Error('Unknown issuer: ' + assertion.$.Issuer);
+    }
 
     // check AuthnResponse dates
-    if (now < notBefore || now >= notOnOrAfter)
+    if (now < notBefore || now >= notOnOrAfter) {
       throw new Error(`The CDSSO Assertion is not in date: ${notBefore} -  ${notOnOrAfter}`);
+    }
 
     return nameId._;
   }
@@ -371,7 +373,7 @@ export class PolicyAgent extends EventEmitter {
    */
   getLoginUrl(req: IncomingMessage): string {
     return this.amClient.getLoginUrl(baseUrl(req) + req.url, this.options.realm);
-  };
+  }
 
   /**
    * Returns a CDSSO login URL
@@ -379,7 +381,7 @@ export class PolicyAgent extends EventEmitter {
   getCDSSOUrl(req: IncomingMessage): string {
     const target = baseUrl(req) + CDSSO_PATH + '?goto=' + encodeURIComponent(req.url || '');
     return this.amClient.getCDSSOUrl(target, this.options.appUrl || '');
-  };
+  }
 
   /**
    * A express router factory for the notification receiver endpoint. It can be used as a middleware for your express
@@ -410,7 +412,7 @@ export class PolicyAgent extends EventEmitter {
         if (svcid === 'session') {
           this.sessionNotification(xml.NotificationSet);
         } else {
-          this.logger.error(`PolicyAgent: unknown notification type ${svcid}`)
+          this.logger.error(`PolicyAgent: unknown notification type ${svcid}`);
         }
       } catch (err) {
         this.logger.error(`PolicyAgent: ${err.message}`, err);
@@ -418,7 +420,7 @@ export class PolicyAgent extends EventEmitter {
     });
 
     return router;
-  };
+  }
 
   /**
    * Parses notifications in a notification set and emits a 'session' event for each. CookieShield instances listen
@@ -430,7 +432,7 @@ export class PolicyAgent extends EventEmitter {
       const xml = await parseXml(notification);
       this.emit(SESSION_EVENT, xml.SessionNotification.Session[ 0 ].$);
     });
-  };
+  }
 
   /**
    * Cleans up after the agent (closes the cache and logs out the agent)
@@ -444,7 +446,7 @@ export class PolicyAgent extends EventEmitter {
       const { cookieName } = await this.getServerInfo();
 
       try {
-        await this.amClient.logout(tokenId, cookieName, this.options.realm)
+        await this.amClient.logout(tokenId, cookieName, this.options.realm);
       } catch {
         // ignore
       }
@@ -470,7 +472,7 @@ export class PolicyAgent extends EventEmitter {
           SessionRequest: {
             '@vers': '1.0',
             '@reqid': ShortId.generate(),
-            '@requester': new Buffer(`token: ${tokenId}`).toString('base64')
+            '@requester': Buffer.from(`token: ${tokenId}`).toString('base64')
           }
         })
         .ele('AddSessionListener')
@@ -502,7 +504,7 @@ export class PolicyAgent extends EventEmitter {
       await this.amClient.sessionServiceRequest(requestSet);
       this.logger.info('PolicyAgent: registered session listener for %s', sessionId);
     }, 5, 'registerSessionListener');
-  };
+  }
 
 
   /**

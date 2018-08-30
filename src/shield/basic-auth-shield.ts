@@ -1,12 +1,12 @@
-import { IncomingMessage, ServerResponse } from 'http';
 import * as basicAuth from 'basic-auth';
+import { IncomingMessage, ServerResponse } from 'http';
 
-import { Deferred } from '../utils/deferred';
+import { ShieldEvaluationError } from '../error/shield-evaluation-error';
 import { PolicyAgent } from '../policy-agent';
+import { Deferred } from '../utils/deferred';
 import { sendResponse } from '../utils/http-utils';
 import { SessionData } from './session-data';
 import { Shield } from './shield';
-import { ShieldEvaluationError } from '../error/shield-evaluation-error';
 
 export interface BasicAuthShieldOptions {
   realm?: string;
@@ -32,9 +32,9 @@ export class BasicAuthShield implements Shield {
     const deferred = new Deferred<SessionData>();
 
     if (user) {
-        await this.authenticate(agent, user.name, user.pass);
-        agent.logger.info('BasicAuthShield: %s => allow', req.url);
-        deferred.resolve({ key: user.name, data: { username: user.name } });
+      await this.authenticate(agent, user.name, user.pass);
+      agent.logger.info('BasicAuthShield: %s => allow', req.url);
+      deferred.resolve({ key: user.name, data: { username: user.name } });
     } else {
       agent.logger.info('BasicAuthShield: %s => unauthenticated', req.url);
       this.sendChallenge(res);

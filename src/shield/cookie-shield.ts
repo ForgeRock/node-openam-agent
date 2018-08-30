@@ -1,11 +1,11 @@
 import { IncomingMessage, ServerResponse } from 'http';
 
-import { Deferred } from '../utils/deferred';
+import { ShieldEvaluationError } from '../error/shield-evaluation-error';
 import { PolicyAgent } from '../policy-agent';
+import { Deferred } from '../utils/deferred';
 import { redirect } from '../utils/http-utils';
 import { SessionData } from './session-data';
 import { Shield } from './shield';
-import { ShieldEvaluationError } from '../error/shield-evaluation-error';
 
 export interface CookieShieldOptions {
   /**
@@ -63,13 +63,13 @@ export class CookieShield implements Shield {
 
       if (err instanceof ShieldEvaluationError) {
         throw err;
-      } else {
-        throw new ShieldEvaluationError(
-          err.statusCode || err.status || 500,
-          err.name || err.message,
-          `${err.stack}\n${formattedError}`
-        );
       }
+
+      throw new ShieldEvaluationError(
+        err.statusCode || err.status || 500,
+        err.name || err.message,
+        `${err.stack}\n${formattedError}`
+      );
     }
 
     return await deferred.promise;

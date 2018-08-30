@@ -1,7 +1,7 @@
-import { OutgoingHttpHeaders } from 'http';
-import * as url from 'url';
 import Axios from 'axios';
+import { OutgoingHttpHeaders } from 'http';
 import * as shortid from 'shortid';
+import * as url from 'url';
 
 export interface AmServerInfo {
   cookieName: string;
@@ -50,7 +50,7 @@ export class AmClient {
         this.serverAddress + '/json/serverinfo/*',
         { headers: { host: this.hostname } })
       .then(res => res.data);
-  };
+  }
 
   /**
    * Sends an authentication request to OpenAM. Returns Promise. The module argument overrides service. The default
@@ -84,14 +84,15 @@ export class AmClient {
         params: { realm, authIndexType, authIndexValue, noSession }
       })
       .then(res => res.data);
-  };
+  }
 
   /**
    * Sends a logout request to OpenAM to to destroy the session identified by sessionId
    */
   async logout(sessionId: string, cookieName: string, realm = '/'): Promise<any> {
-    if (!sessionId)
+    if (!sessionId) {
       return;
+    }
 
     const headers: OutgoingHttpHeaders = {
       [ cookieName ]: sessionId,
@@ -105,15 +106,16 @@ export class AmClient {
         headers,
         params: { realm, _action: 'logout' }
       })
-      .then(res => res.data)
-  };
+      .then(res => res.data);
+  }
 
   /**
    * Validates a given sessionId against OpenAM.
    */
   validateSession(sessionId: string): Promise<{ valid: boolean }> {
-    if (!sessionId)
+    if (!sessionId) {
       return Promise.resolve({ valid: false });
+    }
 
     return Axios
       .post(this.serverAddress + '/json/sessions/' + sessionId, null, {
@@ -125,7 +127,7 @@ export class AmClient {
         }
       })
       .then(res => res.data);
-  };
+  }
 
   /**
    * Returns an OpenAM login URL with the goto query parameter set to the original URL in req.
@@ -135,7 +137,7 @@ export class AmClient {
       pathname: '/UI/Login',
       query: { goto, realm }
     });
-  };
+  }
 
   /**
    * Constructs a CDSSO login URL
@@ -156,7 +158,7 @@ export class AmClient {
         IssueInstant: new Date().toISOString()
       }
     });
-  };
+  }
 
   /**
    * Gets policy decisions from OpenAM for params. params must be a well formatted OpenAM policy request object.
@@ -179,7 +181,7 @@ export class AmClient {
         }
       })
       .then(res => res.data);
-  };
+  }
 
   /**
    * Sends requestSet to the SessionService. requestSet must be a properly formatted XML document.
@@ -196,7 +198,7 @@ export class AmClient {
         }
       })
       .then(res => res.data);
-  };
+  }
 
   /**
    * Validates the OAuth2 access_token in the specified realm.
@@ -218,7 +220,7 @@ export class AmClient {
         }
       })
       .then(res => res.data);
-  };
+  }
 
   /**
    * Gets a user's profile (requires an agent or admin session).
@@ -236,7 +238,7 @@ export class AmClient {
         }
       })
       .then(res => res.data);
-  };
+  }
 }
 
 /**

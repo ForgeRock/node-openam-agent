@@ -46,7 +46,7 @@ class MockAxios {
     return {
       respond: data => matchingRequests[ 0 ].deferred.resolve(data),
       error: error => matchingRequests[ 0 ].deferred.reject(error)
-    }
+    };
   }
 
   static verify() {

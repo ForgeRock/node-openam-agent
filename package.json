@@ -21,7 +21,7 @@
     "prebuild": "rm -rf dist",
     "build": "tsc",
     "test": "jest",
-    "lint": "tslint  --type-check --format stylish --project tsconfig.json --config tslint.json "
+    "lint": "tslint --format stylish --project tsconfig.json --config tslint.json "
   },
   "dependencies": {
     "axios": "^0.18.0",

@@ -33,16 +33,16 @@ export class InMemoryCache<T = any> implements Cache<T> {
     const entry = this.keyValueStore.get(key);
 
     if (!entry) {
-      throw new Error('InMemoryCache: entry not found in cache')
+      throw new Error('InMemoryCache: entry not found in cache');
     }
 
     // clean up the entry if it has expired
     if (this.expireAfterSeconds && Date.now() > entry.timestamp + this.expireAfterSeconds * 1000) {
       await this.remove(key);
       throw new Error('InMemoryCache: entry expired');
-    } else {
-      return entry.data;
     }
+
+    return entry.data;
   }
 
   async put(key: string, value: T): Promise<void> {

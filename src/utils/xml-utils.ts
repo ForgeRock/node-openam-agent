@@ -1,5 +1,5 @@
-import { Parser } from 'xml2js';
 import { promisify } from 'util';
+import { Parser } from 'xml2js';
 
 export function parseXml(doc: string): Promise<any> {
   const parser = new Parser();
