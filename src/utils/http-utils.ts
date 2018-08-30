@@ -19,7 +19,7 @@ export function redirect(res: ServerResponse, location: string, permanent = fals
  * Returns the origin pf the request (<protocol>://<host>)
  */
 export function baseUrl(req: IncomingMessage): string {
-  return getProtocol(req) + '://' + req.headers.host;
+  return `${getProtocol(req)}://${req.headers.host}`;
 }
 
 /**
