@@ -1,6 +1,6 @@
 {
   "name": "@forgerock/openam-agent",
-  "version": "4.0.5",
+  "version": "5.0.0-beta",
   "description": "OpenAM Policy Agent implementation for Express",
   "author": "Zoltan Tarcsay <zoltan.tarcsay@forgerock.com>",
   "repository": {
