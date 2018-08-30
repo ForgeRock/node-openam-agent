@@ -14,7 +14,7 @@ import { AmServerInfo } from './am-server-info';
 export class AmClient {
   serverUrl: string;
   serverAddress: string;
-  hostname?: string;
+  hostname?: string = null;
 
   constructor(serverUrl: string, privateIp?: string) {
     this.serverUrl = serverUrl.replace(/\/$/, '');
@@ -107,7 +107,7 @@ export class AmClient {
       .post(`${this.serverAddress}/json/sessions/${sessionId}`, null, {
         params: { _action: 'validate' },
         headers: {
-          'host': this.hostname,
+          host: this.hostname,
           'Content-Type': 'application/json',
           'Accept-API-Version': 'resource=1.1'
         }

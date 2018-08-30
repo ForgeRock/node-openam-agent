@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "prebuild": "rm -rf dist",
-    "build": "tsc",
+    "build": "tsc && cp -r src/templates dist",
     "test": "jest",
     "lint": "tslint --format stylish --project tsconfig.json --config tslint.json "
   },
@@ -60,7 +60,10 @@
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
-    "src"
+    "src",
+    "!src/__mocks__",
+    "!src/testing",
+    "!src/**/*.spec.ts"
   ],
   "jest": {
     "moduleFileExtensions": [

@@ -119,7 +119,7 @@ export class CookieShield implements Shield {
     const { domains } = await agent.getServerInfo();
 
     for (const domain of domains) {
-      if (req.headers.host.startsWith(domain)) {
+      if (req.headers.host.includes(domain)) {
         domainMatch = true;
         break;
       }

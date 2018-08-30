@@ -71,9 +71,9 @@ export class PolicyAgent extends EventEmitter {
   constructor(readonly options: PolicyAgentOptions) {
     super();
 
-    const { openAMClient, serverUrl, privateIP, logger, logLevel, sessionCache } = options;
+    const { openAMClient, serverUrl, privateIP, logger, logLevel, sessionCache, logAsJson } = options;
 
-    this.logger = logger || new Logger(logLevel, this.id);
+    this.logger = logger || new Logger(logLevel, this.id, { json: logAsJson });
     this.amClient = openAMClient || new AmClient(serverUrl, privateIP);
     this.sessionCache = sessionCache || new InMemoryCache({ expireAfterSeconds: 300, logger });
     this.errorTemplate = options.errorPage || this.getDefaultErrorTemplate();
@@ -139,7 +139,7 @@ export class PolicyAgent extends EventEmitter {
         this.logger.debug(`PolicyAgent: ${name} - caught error ${err.message}`, err);
         this.logger.info(`PolicyAgent: ${name} - retrying request - attempt ${attemptCount} of ${attemptLimit}`);
         // renew agent session on 401 response
-        if (err instanceof InvalidSessionError || err.response.status === 401) {
+        if (err instanceof InvalidSessionError || err.statusCode === 401) {
           this.agentSession = this.authenticateAgent();
           await this.agentSession;
         }
@@ -285,7 +285,7 @@ export class PolicyAgent extends EventEmitter {
           pkg
         });
 
-        sendResponse(res, err.response.status, body, { 'Content-Type': 'text/html' });
+        sendResponse(res, err.statusCode, body, { 'Content-Type': 'text/html' });
       }
     };
   }

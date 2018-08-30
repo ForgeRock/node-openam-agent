@@ -138,7 +138,7 @@ describe('AmClient', () => {
 
       it('request should not have header host value', () => {
         amClient.getServerInfo();
-        expect(mockAxios.get.mock.calls[ 0 ][ 1 ].headers.host).toBeUndefined();
+        expect(mockAxios.get.mock.calls[ 0 ][ 1 ].headers.host).toBeFalsy();
       });
     });
 
@@ -150,7 +150,7 @@ describe('AmClient', () => {
 
       it('request should not have header host value', () => {
         amClient.authenticate(null, null);
-        expect(mockAxios.post.mock.calls[ 0 ][ 2 ].headers.host).toBeUndefined();
+        expect(mockAxios.post.mock.calls[ 0 ][ 2 ].headers.host).toBeFalsy();
       });
     });
 
@@ -162,7 +162,7 @@ describe('AmClient', () => {
 
       it('request should not have header host value', () => {
         amClient.logout('sessionid', null);
-        expect(mockAxios.post.mock.calls[ 0 ][ 2 ].headers.host).toBeUndefined();
+        expect(mockAxios.post.mock.calls[ 0 ][ 2 ].headers.host).toBeFalsy();
       });
     });
 
@@ -174,7 +174,7 @@ describe('AmClient', () => {
 
       it('request should not have header host value', () => {
         amClient.validateSession('sessionid');
-        expect(mockAxios.post.mock.calls[ 0 ][ 2 ].headers.host).toBeUndefined();
+        expect(mockAxios.post.mock.calls[ 0 ][ 2 ].headers.host).toBeFalsy();
       });
     });
 
@@ -186,7 +186,7 @@ describe('AmClient', () => {
 
       it('request should not have header host value', () => {
         amClient.getPolicyDecision(<any>{}, 'sessionID', 'cookieName');
-        expect(mockAxios.post.mock.calls[ 0 ][ 2 ].headers.host).toBeUndefined();
+        expect(mockAxios.post.mock.calls[ 0 ][ 2 ].headers.host).toBeFalsy();
       });
     });
 
@@ -198,7 +198,7 @@ describe('AmClient', () => {
 
       it('request should not have header host value', () => {
         amClient.sessionServiceRequest('');
-        expect(mockAxios.post.mock.calls[ 0 ][ 2 ].headers.host).toBeUndefined();
+        expect(mockAxios.post.mock.calls[ 0 ][ 2 ].headers.host).toBeFalsy();
       });
     });
 
@@ -210,7 +210,7 @@ describe('AmClient', () => {
 
       it('request should not have header host value', () => {
         amClient.validateAccessToken('accessToken');
-        expect(mockAxios.get.mock.calls[ 0 ][ 1 ].headers.host).toBeUndefined();
+        expect(mockAxios.get.mock.calls[ 0 ][ 1 ].headers.host).toBeFalsy();
       });
     });
 
@@ -222,7 +222,7 @@ describe('AmClient', () => {
 
       it('request should not have header host value', () => {
         amClient.getProfile(null, null, null, null);
-        expect(mockAxios.get.mock.calls[ 0 ][ 1 ].headers.host).toBeUndefined();
+        expect(mockAxios.get.mock.calls[ 0 ][ 1 ].headers.host).toBeFalsy();
       });
     });
   });

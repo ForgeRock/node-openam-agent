@@ -62,6 +62,11 @@ export interface PolicyAgentOptions {
   logLevel?: string;
 
   /**
+   * Change the log output format to JSON (just shorthand for setting up a Winston logger with JSON output to console)
+   */
+  logAsJson?: boolean;
+
+  /**
    * Custom session cache object (if undefined, a SimpleCache instance will be
    * created with an expiry time of 5 minutes)
    */

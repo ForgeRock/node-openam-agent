@@ -1,6 +1,7 @@
+import { IncomingMessage, ServerResponse } from 'http';
+
 import { PolicyAgent } from '../policyagent/policy-agent';
 import { CookieShield } from './cookie-shield';
-import { ServerResponse, IncomingMessage } from 'http';
 
 describe('CookieShield', () => {
   let agent: PolicyAgent;
@@ -11,11 +12,11 @@ describe('CookieShield', () => {
   beforeEach(() => {
     cookieShield = new CookieShield();
     res = <any>{ writeHead: jest.fn(), end: jest.fn() };
-    req = <any>{ url: 'test-login-url', headers: { cookie: 'testCookie=testSession', host: 'foo' } };
+    req = <any>{ url: 'test-login-url', headers: { cookie: 'testCookie=testSession', host: 'foo.example.com' } };
     agent = new PolicyAgent({ serverUrl: 'https://openam.example.com/openam', logLevel: 'off' });
 
     jest.spyOn(agent, 'getServerInfo')
-      .mockReturnValue(Promise.resolve({ cookieName: 'testCookie', domains: [ 'foo' ] }));
+      .mockReturnValue(Promise.resolve({ cookieName: 'testCookie', domains: [ '.example.com' ] }));
   });
 
   describe('evaluate()', () => {
@@ -32,14 +33,14 @@ describe('CookieShield', () => {
       let session, error;
 
       cookieShield.evaluate(req, res, agent)
-        .then(res => session = res)
+        .then(resp => session = resp)
         .catch(err => error = err);
 
       setTimeout(() => {
         expect(session).toBeUndefined();
         expect(error).toBeUndefined();
         expect(res.writeHead).toHaveBeenCalledWith(302,
-          { Location: 'https://openam.example.com/openam/UI/Login?goto=http%3A%2F%2Ffootest-login-url&realm=%2F' });
+          { Location: 'https://openam.example.com/openam/UI/Login?goto=http%3A%2F%2Ffoo.example.comtest-login-url&realm=%2F' });
         expect(res.end).toHaveBeenCalled();
         done();
       }, 200);

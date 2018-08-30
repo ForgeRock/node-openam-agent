@@ -41,12 +41,12 @@ export class Oauth2Shield implements Shield {
       let message = 'Internal server error';
 
       try {
-        message = JSON.parse(err.response.body).error_description;
+        message = JSON.parse(err.body).error_description;
       } catch {
         // body is not json
       }
 
-      throw new ShieldEvaluationError(err.response.statusCode || 500, message);
+      throw new ShieldEvaluationError(err.statusCode || 500, message);
     }
   }
 }

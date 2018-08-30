@@ -1,4 +1,9 @@
-import { CLILoggingLevel, Logger as WinstonLogger, TransportOptions, transports } from 'winston';
+import {
+  CLILoggingLevel,
+  ConsoleTransportOptions,
+  Logger as WinstonLogger,
+  transports
+} from 'winston';
 
 /**
  * Extended logger that logs the ID as part of the message; this distinguishes the output from different loggers.
@@ -6,8 +11,16 @@ import { CLILoggingLevel, Logger as WinstonLogger, TransportOptions, transports 
 export class Logger extends WinstonLogger {
   private superLog = this.log;
 
-  constructor(level = 'error', private id?: string, options: TransportOptions = {}) {
-    super({ transports: [ new transports.Console({ level, timestamp: true, ...options }) ] });
+  constructor(level = 'error', private id?: string, options: ConsoleTransportOptions = {}) {
+    super({
+      transports: [ new transports.Console({
+        level,
+        timestamp: true, ...options,
+        stringify: options.json
+          ? obj => JSON.stringify(obj, null, options.prettyPrint ? 2 : 0)
+          : null
+      }) ]
+    });
   }
 
   /**
