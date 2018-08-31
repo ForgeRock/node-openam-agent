@@ -54,9 +54,9 @@ export class CookieShield implements Shield {
 
       if (sessionData) {
         deferred.resolve({ key: sessionId, data: sessionData });
+      } else {
+        this.redirectToLogin(req, res, agent);
       }
-
-      this.redirectToLogin(req, res, agent);
     } catch (err) {
       const formattedError = JSON.stringify(err, null, 2);
       agent.logger.debug('CookieShield: ', formattedError);
@@ -79,17 +79,18 @@ export class CookieShield implements Shield {
                                     res: ServerResponse,
                                     agent: PolicyAgent,
                                     sessionId: string): Promise<any> {
-    const { valid, dn, uid, realm } = await agent.validateSession(sessionId);
+    const validationResponse = await agent.validateSession(sessionId);
+    const { valid, dn, uid, realm } = validationResponse;
 
     if (valid) {
       agent.logger.info(`CookieShield: ${req.url} => allow`);
 
       if (dn && this.options.getProfiles) {
         const profile = await agent.getUserProfile(uid, realm, sessionId);
-        return { ...res, ...profile };
+        return { ...validationResponse, ...profile };
       }
 
-      return res;
+      return validationResponse;
     }
 
     // pass-through: no need to enforce a valid session
