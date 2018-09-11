@@ -21,7 +21,8 @@
     "prebuild": "rm -rf dist",
     "build": "tsc && cp -r src/templates dist",
     "test": "jest",
-    "lint": "tslint --format stylish --project tsconfig.json --config tslint.json "
+    "lint": "tslint --format stylish --project tsconfig.json --config tslint.json",
+    "prepublish": "npm run build"
   },
   "dependencies": {
     "axios": "^0.18.0",

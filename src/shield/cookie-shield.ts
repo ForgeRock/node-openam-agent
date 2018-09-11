@@ -58,8 +58,7 @@ export class CookieShield implements Shield {
         this.redirectToLogin(req, res, agent);
       }
     } catch (err) {
-      const formattedError = JSON.stringify(err, null, 2);
-      agent.logger.debug('CookieShield: ', formattedError);
+      agent.logger.debug(`CookieShield: ${err.message} ${err.stack}`);
 
       if (err instanceof ShieldEvaluationError) {
         throw err;
@@ -68,7 +67,7 @@ export class CookieShield implements Shield {
       throw new ShieldEvaluationError(
         err.statusCode || err.status || 500,
         err.name || err.message,
-        `${err.stack}\n${formattedError}`
+        err.stack
       );
     }
 

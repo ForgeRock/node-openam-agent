@@ -285,7 +285,7 @@ export class PolicyAgent extends EventEmitter {
           pkg
         });
 
-        sendResponse(res, err.statusCode, body, { 'Content-Type': 'text/html' });
+        sendResponse(res, err.statusCode || 500, body, { 'Content-Type': 'text/html' });
       }
     };
   }
