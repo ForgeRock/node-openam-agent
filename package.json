@@ -1,13 +1,7 @@
 {
   "name": "@forgerock/openam-agent",
-  "version": "4.0.5",
+  "version": "5.0.0-beta.1",
   "description": "OpenAM Policy Agent implementation for Express",
-  "main": "lib/index.js",
-  "scripts": {
-    "demo": "node test/server.js",
-    "test": "mocha",
-    "jsdoc": "jsdoc -c jsdoc.json -r"
-  },
   "author": "Zoltan Tarcsay <zoltan.tarcsay@forgerock.com>",
   "repository": {
     "type": "git",
@@ -23,32 +17,65 @@
     "Policy",
     "Agent"
   ],
+  "scripts": {
+    "prebuild": "rm -rf dist",
+    "build": "tsc && cp -r src/templates dist",
+    "test": "jest",
+    "lint": "tslint --format stylish --project tsconfig.json --config tslint.json "
+  },
   "dependencies": {
-    "@forgerock/openam-agent-cache-simple": "^2.0.0",
-    "assert": "^1.4.1",
+    "axios": "^0.18.0",
     "basic-auth": "^1.1.0",
-    "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
     "cookie": "^0.2.0",
     "express": "^4.15.3",
     "handlebars": "^4.0.10",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.2",
     "shortid": "^2.2.8",
     "shutdown-handler": "^1.0.1",
-    "util": "^0.10.3",
+    "util.promisify": "^1.0.0",
     "winston": "^1.0.2",
     "xml2js": "^0.4.12",
     "xmlbuilder": "^10.0.0"
   },
   "devDependencies": {
-    "jsdoc": "^3.5.3",
-    "mocha": "^5.2.0",
-    "should": "^8.0.2",
-    "should-sinon": "0.0.3",
-    "sinon": "^1.17.7"
+    "@types/basic-auth": "^1.1.2",
+    "@types/express": "^4.16.0",
+    "@types/handlebars": "^4.0.39",
+    "@types/jest": "^23.3.1",
+    "@types/node": "^10.9.2",
+    "@types/shortid": "0.0.29",
+    "@types/winston": "^2.3.9",
+    "@types/xml2js": "^0.4.3",
+    "jest": "^23.5.0",
+    "ts-jest": "^23.1.4",
+    "tslint": "^5.11.0",
+    "tslint-consistent-codestyle": "^1.13.3",
+    "tslint-eslint-rules": "^5.4.0",
+    "typescript": "^3.0.1"
   },
   "engines": {
-    "node": ">=0.11"
+    "node": ">=6"
+  },
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "!src/__mocks__",
+    "!src/testing",
+    "!src/**/*.spec.ts"
+  ],
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".spec.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "coverageDirectory": "../coverage"
   }
 }
