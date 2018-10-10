@@ -65,7 +65,8 @@ export class AmClient {
         headers: {
           host: this.hostname,
           'X-OpenAM-Username': username,
-          'X-OpenAM-Password': password
+          'X-OpenAM-Password': password,
+          'Accept-API-Version': 'resource=1.0'
         },
         params: { realm, authIndexType, authIndexValue, noSession }
       })

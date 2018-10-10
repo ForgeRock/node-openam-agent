@@ -142,6 +142,8 @@ export class PolicyAgent extends EventEmitter {
         if (err instanceof InvalidSessionError || err.statusCode === 401) {
           this.agentSession = this.authenticateAgent();
           await this.agentSession;
+        } else if (attemptCount === attemptLimit) {
+          throw err
         }
       }
     }
