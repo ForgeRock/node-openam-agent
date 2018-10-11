@@ -136,10 +136,10 @@ export class PolicyAgent extends EventEmitter {
         return await request();
       } catch (err) {
         attemptCount++;
-        this.logger.debug(`PolicyAgent: ${name} - caught error ${err.message}`, err);
+        this.logger.debug(`PolicyAgent: ${name} - caught error ${err.message}`);
         this.logger.info(`PolicyAgent: ${name} - retrying request - attempt ${attemptCount} of ${attemptLimit}`);
         // renew agent session on 401 response
-        if (err instanceof InvalidSessionError || err.statusCode === 401) {
+        if (err instanceof InvalidSessionError || err.statusCode === 401 || err.code === 401 || (err.response && err.response.status === 401)) {
           this.agentSession = this.authenticateAgent();
           await this.agentSession;
         } else if (attemptCount === attemptLimit) {
