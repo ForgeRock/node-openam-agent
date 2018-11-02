@@ -1,4 +1,4 @@
-import { LoggerInstance } from 'winston';
+import { Logger } from 'winston';
 import { AmClient } from '../amclient/am-client';
 import { Cache } from '../cache/cache';
 
@@ -54,7 +54,7 @@ export interface PolicyAgentOptions {
    * A Winston.js logger instance. If undefined, a new Console logger
    * is created.
    */
-  logger?: LoggerInstance;
+  logger?: Logger;
 
   /**
    * Logging level: see winston's documentation; only used when logger is undefined.

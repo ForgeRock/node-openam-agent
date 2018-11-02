@@ -8,7 +8,7 @@ import * as Handlebars from 'handlebars';
 import { IncomingMessage, ServerResponse } from 'http';
 import { resolve } from 'path';
 import * as ShortId from 'shortid';
-import { LoggerInstance } from 'winston';
+import { Logger } from 'winston';
 import * as XMLBuilder from 'xmlbuilder';
 
 import { AmClient } from '../amclient/am-client';
@@ -20,7 +20,7 @@ import { InMemoryCache } from '../cache/in-memory-cache';
 import { InvalidSessionError } from '../error/invalid-session-error';
 import { Shield } from '../shield/shield';
 import { baseUrl, sendResponse } from '../utils/http-utils';
-import { Logger } from '../utils/logger';
+import { createLogger } from '../utils/logger';
 import { parseXml } from '../utils/xml-utils';
 import { EvaluationErrorDetails, PolicyAgentOptions } from './policy-agent-options';
 
@@ -59,7 +59,7 @@ export const NOTIFICATION_PATH = '/agent/notifications';
 export class PolicyAgent extends EventEmitter {
   public readonly id = ShortId.generate();
   public amClient: AmClient;
-  public logger: LoggerInstance;
+  public logger: Logger;
   public sessionCache: Cache;
 
   private serverInfo?: Promise<AmServerInfo>;
@@ -73,7 +73,7 @@ export class PolicyAgent extends EventEmitter {
 
     const { openAMClient, serverUrl, privateIP, logger, logLevel, sessionCache, logAsJson } = options;
 
-    this.logger = logger || new Logger(logLevel, this.id, { json: logAsJson });
+    this.logger = logger || createLogger(logLevel, this.id, { json: logAsJson });
     this.amClient = openAMClient || new AmClient(serverUrl, privateIP);
     this.sessionCache = sessionCache || new InMemoryCache({ expireAfterSeconds: 300, logger });
     this.errorTemplate = options.errorPage || this.getDefaultErrorTemplate();

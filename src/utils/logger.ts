@@ -1,46 +1,41 @@
-import {
-  CLILoggingLevel,
-  ConsoleTransportOptions,
-  Logger as WinstonLogger,
-  transports
-} from 'winston';
+import * as winston from 'winston';
+import { format, transports } from 'winston';
 
-/**
- * Extended logger that logs the ID as part of the message; this distinguishes the output from different loggers.
- */
-export class Logger extends WinstonLogger {
-  private superLog = this.log;
-
-  constructor(level = 'error', private id?: string, options: ConsoleTransportOptions = {}) {
-    super({
-      transports: [ new transports.Console({
-        level,
-        timestamp: true, ...options,
-        stringify: options.json
-          ? obj => JSON.stringify(obj, null, options.prettyPrint ? 2 : 0)
-          : null
-      }) ]
-    });
-  }
-
-  /**
-   * Overriding the log method is a bit awkward because of the type syntax in Winston, hence the => form
-   */
-  log = (level: string, msg: string, ...meta: any[]): this => {
-    if (this.id) {
-      msg = `[${this.id}] ${msg}`;
-    }
-
-    return this.superLog(level, msg, ...meta);
-  }
+export interface LoggerOptions {
+  json?: boolean;
+  prettyPrint?: boolean;
+  format?: any;
 }
 
 /**
- * Creates a new winston Logger
+ * Creates a new winston Logger with specific formatting
  * @example
- * var logger = logger('info', 'myLogger');
+ * var logger = createLogger('info', 'myLogger');
  * logger.info('hello world!');
  */
-export function logger(level: CLILoggingLevel, id: string) {
-  return new Logger(level, id);
+export function createLogger(level = 'error', id?: string, options: LoggerOptions = {}) {
+  let formats = [
+    format.timestamp()
+  ];
+
+  if (options.prettyPrint) {
+    formats = [ ...formats, format.prettyPrint() ];
+  }
+
+  if (options.json) {
+    formats = [ ...formats, format.label({ label: id }), format.json() ];
+  } else {
+    formats = [
+      ...formats,
+      format.label({ label: id, message: true }),
+      format.align(),
+      format.colorize(),
+      format.simple()
+    ];
+  }
+
+  return winston.createLogger({
+    transports: [ new transports.Console({ level }) ],
+    format: options.format || format.combine(...formats)
+  });
 }

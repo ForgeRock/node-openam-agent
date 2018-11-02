@@ -1,4 +1,4 @@
-import { LoggerInstance } from 'winston';
+import { Logger } from 'winston';
 import { Cache } from './cache';
 import Timer = NodeJS.Timer;
 
@@ -16,10 +16,10 @@ export interface InMemoryCacheEntry {
 export class InMemoryCache<T = any> implements Cache<T> {
   private readonly keyValueStore = new Map<string, InMemoryCacheEntry>();
   private readonly expireAfterSeconds: number;
-  private readonly logger?: LoggerInstance;
+  private readonly logger?: Logger;
   private cleanupIntervalRef?: Timer;
 
-  constructor({ expireAfterSeconds, logger }: { expireAfterSeconds: number, logger?: LoggerInstance }) {
+  constructor({ expireAfterSeconds, logger }: { expireAfterSeconds: number, logger?: Logger }) {
     this.expireAfterSeconds = parseFloat((expireAfterSeconds || 0).toString());
     this.logger = logger;
 
