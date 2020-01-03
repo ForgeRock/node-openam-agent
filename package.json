@@ -1,7 +1,7 @@
 {
   "name": "@forgerock/openam-agent",
   "version": "5.0.0",
-  "description": "OpenAM Policy Agent implementation for Express",
+  "description": "ForgeRock AM Policy Agent for Node.js",
   "author": "Zoltan Tarcsay <zoltan.tarcsay@forgerock.com>",
   "repository": {
     "type": "git",
@@ -13,6 +13,8 @@
   "homepage": "https://github.com/ForgeRock/node-openam-agent/wiki",
   "license": "MIT",
   "keywords": [
+    "ForgeRock",
+    "Access Management",
     "OpenAM",
     "Policy",
     "Agent"
