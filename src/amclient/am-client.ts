@@ -19,8 +19,9 @@ export class AmClient {
   constructor(serverUrl: string, privateIp?: string) {
     this.serverUrl = serverUrl.replace(/\/$/, '');
 
+    this.hostname = url.parse(this.serverUrl).hostname || '';
+
     if (privateIp) {
-      this.hostname = url.parse(this.serverUrl).hostname || '';
       this.serverAddress = this.serverUrl.replace(this.hostname, privateIp);
     } else {
       this.serverAddress = this.serverUrl;
