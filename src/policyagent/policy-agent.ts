@@ -140,7 +140,7 @@ export class PolicyAgent extends EventEmitter {
         this.logger.info(`PolicyAgent: ${name} - retrying request - attempt ${attemptCount} of ${attemptLimit}`);
         // renew agent session on 401 response
         if (err instanceof InvalidSessionError || err.statusCode === 401 || err.code === 401 ||
-           (err.response && err.response.status === 401)) {
+          (err.response && err.response.status === 401)) {
           this.agentSession = this.authenticateAgent();
           await this.agentSession;
         } else if (attemptCount === attemptLimit) {
@@ -545,7 +545,7 @@ export class PolicyAgent extends EventEmitter {
   /**
    * Compiles the default error page with Handlebars.js
    */
-  protected getDefaultErrorTemplate() {
+  protected getDefaultErrorTemplate(): (options: any) => string {
     return Handlebars.compile(fs.readFileSync(resolve(__dirname, '../templates/error.handlebars')).toString());
   }
 }
