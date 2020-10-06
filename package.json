@@ -24,7 +24,7 @@
     "build": "tsc && cp -r src/templates dist",
     "test": "jest",
     "lint": "tslint --format stylish --project tsconfig.json --config tslint.json",
-    "prepublishonly": "npm run build",
+    "prepublishOnly": "npm run lint && npm test && npm run build",
     "docs": "typedoc --out docs src"
   },
   "dependencies": {
