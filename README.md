@@ -12,9 +12,9 @@ You can find howtos and API docs in the [wiki](https://github.com/ForgeRock/node
 npm i @forgerock/openam-agent
 ```
 
-## JSDoc
+## TypeDoc
 
-Run `npm run jsdoc` to build the API docs or just read the [wiki](https://github.com/ForgeRock/node-openam-agent/wiki)
+Run `npm run docs` to build the API docs under /docs
 
 ## Examples
 
