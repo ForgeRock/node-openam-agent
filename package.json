@@ -1,6 +1,6 @@
 {
   "name": "@forgerock/openam-agent",
-  "version": "5.0.4",
+  "version": "5.1.0-beta1",
   "description": "ForgeRock AM Policy Agent for Node.js",
   "author": "Zoltan Tarcsay <zoltan.tarcsay@forgerock.com>",
   "repository": {
