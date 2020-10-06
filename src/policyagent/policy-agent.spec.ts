@@ -73,7 +73,7 @@ describe('PolicyAgent', () => {
     });
 
     await agent.sessionCache.put('mock', sessionData);
-    await agent.sessionCache.get('mock').then(function (data) {
+    await agent.sessionCache.get('mock').then(data => {
       expect(data).toEqual(sessionData);
       agent.emit('session', { state: 'destroyed', sid: 'mock' });
     });
