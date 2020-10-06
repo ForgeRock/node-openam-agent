@@ -26,5 +26,7 @@ export function baseUrl(req: IncomingMessage): string {
  * Returns the request scheme - "http" or "https"
  */
 export function getProtocol(req: IncomingMessage): 'http' | 'https' {
-  return req.url.startsWith('https') ? 'https' : 'http';
+  return req[ 'protocol' ]
+    ?? req.headers[ 'x-forwarded-proto' ]
+    ?? (req.url.startsWith('https') ? 'https' : 'http');
 }
