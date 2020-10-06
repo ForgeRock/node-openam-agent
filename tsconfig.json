@@ -14,6 +14,7 @@
       "node_modules/@types"
     ],
     "lib": [
+      "dom",
       "es5",
       "es6",
       "es2015.core",
@@ -36,5 +37,16 @@
     "**/*.spec.ts",
     "src/testing/**",
     "src/__mocks__/**"
-  ]
+  ],
+  "typedocOptions": {
+    "mode": "library",
+    "out": "docs",
+    "inputFiles": [
+      "./src"
+    ],
+    "exclude": [
+      "src/__mocks__",
+      "src/testing"
+    ]
+  }
 }

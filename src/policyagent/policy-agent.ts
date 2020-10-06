@@ -339,7 +339,7 @@ export class PolicyAgent extends EventEmitter {
         const sessionId = await this.getSessionIdFromLARES(req.body.LARES);
         this.logger.info(`PolicyAgent: CDSSO Assertion validated. Setting cookie for session ${sessionId}`);
         await this.setSessionCookie(res, sessionId);
-        res.redirect(req.query.goto || '/');
+        res.redirect(req.query.goto?.toString() ?? '/');
       } catch (err) {
         fail(err, res);
       }
