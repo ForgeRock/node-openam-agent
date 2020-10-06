@@ -1,4 +1,4 @@
-import { Deferred } from '../utils/deferred';
+import { Deferred } from '..';
 
 interface RequestDetails {
   deferred: Deferred;
@@ -8,7 +8,7 @@ interface RequestDetails {
   options: any;
 }
 
-class MockAxios {
+export class MockAxios {
   static requests: RequestDetails[] = [];
 
   static get = jest.fn((url: string, options: any) => {
@@ -62,5 +62,3 @@ class MockAxios {
     this.requests = [];
   }
 }
-
-export default MockAxios;

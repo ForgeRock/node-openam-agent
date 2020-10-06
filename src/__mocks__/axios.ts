@@ -1,1 +1,1 @@
-export * from '../testing/mock-axios';
+export { MockAxios as default } from '../testing/mock-axios';

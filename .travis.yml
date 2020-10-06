@@ -1,12 +1,8 @@
 language: node_js
 node_js:
-  - current
-  - stable
+  - "14"
+  - "12"
   - "10"
-  - "9"
-  - "8"
-  - "7"
-  - "6"
 script:
   - npm run lint
   - npm test

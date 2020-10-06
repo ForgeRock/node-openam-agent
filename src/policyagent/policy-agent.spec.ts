@@ -1,9 +1,8 @@
 import { Shield } from '../shield/shield';
-import mockAxios from '../testing/mock-axios';
-
+import { MockAxios } from '../testing/mock-axios';
+import { getFixture } from '../testing/utils';
 import { PolicyAgent } from './policy-agent';
 import { PolicyAgentOptions } from './policy-agent-options';
-import { getFixture } from '../testing/utils';
 
 describe('PolicyAgent', () => {
   let agent: PolicyAgent;
@@ -23,7 +22,7 @@ describe('PolicyAgent', () => {
 
   afterEach(() => {
     agent.destroy();
-    mockAxios.reset();
+    MockAxios.reset();
   });
 
   it('should set the options', () => {
@@ -38,11 +37,11 @@ describe('PolicyAgent', () => {
     it('should get the server info via the AM client', async () => {
       const serverInfoPromise = agent.getServerInfo();
 
-      mockAxios
+      MockAxios
         .expectOne('http://openam.example.com:8080/openam/json/serverinfo/*', 'GET')
         .respond({ data: { cookieName: 'test-cookie' } });
 
-      mockAxios.verify();
+      MockAxios.verify();
 
       const serverInfo = await serverInfoPromise;
 
@@ -54,11 +53,11 @@ describe('PolicyAgent', () => {
     it('should get the server info via the AM client', async () => {
       const agentSessionPromise = agent.getAgentSession();
 
-      mockAxios
+      MockAxios
         .expectOne('http://openam.example.com:8080/openam/json/authenticate', 'POST')
         .respond({ data: { tokenId: 'foo' } });
 
-      mockAxios.verify();
+      MockAxios.verify();
 
       const agentSession = await agentSessionPromise;
 
@@ -74,7 +73,7 @@ describe('PolicyAgent', () => {
     });
 
     await agent.sessionCache.put('mock', sessionData);
-    await agent.sessionCache.get('mock').then(function (data) {
+    await agent.sessionCache.get('mock').then(data => {
       expect(data).toEqual(sessionData);
       agent.emit('session', { state: 'destroyed', sid: 'mock' });
     });
