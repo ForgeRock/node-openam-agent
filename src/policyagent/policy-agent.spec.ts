@@ -65,15 +65,15 @@ describe('PolicyAgent', () => {
     });
   });
 
-  it('should remove destroyed sessions on session events', async done => {
+  it('should remove destroyed sessions on session events', done => {
     const sessionData = { foo: 'bar' };
 
     agent.on('session', () => {
       agent.sessionCache.get('mock').catch(() => done());
     });
 
-    await agent.sessionCache.put('mock', sessionData);
-    await agent.sessionCache.get('mock').then(data => {
+    agent.sessionCache.put('mock', sessionData);
+    agent.sessionCache.get('mock').then(data => {
       expect(data).toEqual(sessionData);
       agent.emit('session', { state: 'destroyed', sid: 'mock' });
     });

@@ -1,5 +1,6 @@
+import type { AxiosRequestHeaders } from 'axios';
+
 import Axios from 'axios';
-import { OutgoingHttpHeaders } from 'http';
 import * as shortid from 'shortid';
 import * as url from 'url';
 
@@ -82,7 +83,7 @@ export class AmClient {
       return;
     }
 
-    const headers: OutgoingHttpHeaders = {
+    const headers: AxiosRequestHeaders = {
       [ cookieName ]: sessionId,
       host: this.hostname,
       'Content-Type': 'application/json',

@@ -38,11 +38,7 @@
     "src/__mocks__/**"
   ],
   "typedocOptions": {
-    "mode": "library",
     "out": "docs",
-    "inputFiles": [
-      "./src"
-    ],
     "exclude": [
       "src/__mocks__",
       "src/testing"
