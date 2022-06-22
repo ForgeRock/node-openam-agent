@@ -21,6 +21,7 @@ describe('PolicyAgent', () => {
   });
 
   afterEach(() => {
+    // agent.sessionCache.quit();
     agent.destroy();
     MockAxios.reset();
   });

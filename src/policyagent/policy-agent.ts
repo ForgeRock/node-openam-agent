@@ -445,6 +445,13 @@ export class PolicyAgent extends EventEmitter {
    * Cleans up after the agent (closes the cache and logs out the agent)
    */
   async destroy() {
+    // destroy the cache
+    try {
+      await this.sessionCache.quit();
+    } catch {
+      // ignore
+    }
+
     // destroy the session
     if (this.agentSession) {
       const { tokenId } = await this.getAgentSession();
@@ -457,13 +464,6 @@ export class PolicyAgent extends EventEmitter {
       } catch {
         // ignore
       }
-    }
-
-    // destroy the cache
-    try {
-      await this.sessionCache.quit();
-    } catch {
-      // ignore
     }
   }
 

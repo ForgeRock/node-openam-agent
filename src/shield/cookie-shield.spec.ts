@@ -19,6 +19,10 @@ describe('CookieShield', () => {
       .mockReturnValue(Promise.resolve({ cookieName: 'testCookie', domains: [ '.example.com' ] }));
   });
 
+  afterEach(() => {
+    agent.destroy();
+  });
+
   describe('evaluate()', () => {
     it('should call success if the session is valid', async () => {
       jest.spyOn(agent, 'validateSession').mockReturnValue(Promise.resolve({ valid: true }));

@@ -59,6 +59,7 @@ export class InMemoryCache<T = any> implements Cache<T> {
     // cancel the cleanup schedule
     if (this.cleanupIntervalRef) {
       clearInterval(this.cleanupIntervalRef);
+      this.cleanupIntervalRef.unref();
     }
 
     if (this.logger) {
